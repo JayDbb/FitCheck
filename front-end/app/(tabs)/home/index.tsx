@@ -17,13 +17,13 @@ const DATA = [
 const HomeScreen = () => {
   return (
     <SafeAreaView className="flex-1">
-      <MasonryFlashList
+      {/* <MasonryFlashList
         data={DATA}
         numColumns={2}
         renderItem={({ item }) => <Text>{item.title}</Text>}
         keyExtractor={(item) => item.id}
         estimatedItemSize={200}
-      />
+      /> */}
     </SafeAreaView>
   );
 };
