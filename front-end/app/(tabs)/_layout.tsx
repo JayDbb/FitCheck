@@ -53,9 +53,9 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="create"
+        name="post"
         options={{
-          title: "Create",
+          title: "Post",
           tabBarIcon: ({ color }) => (
             <SymbolView
               name="plus"
