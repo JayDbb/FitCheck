@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { SafeAreaView, Text } from "react-native";
 import MasonryList from "@/components/ui/masonry-grid";
+import { useBottomTabOverflow } from "@/components/ui/utils/tab-bar-background";
 
 
 const pins = [
@@ -74,6 +75,7 @@ const HomeScreen = () => {
 
 
   const [refreshing, setRefreshing] = useState(false);
+  const paddingBottom = useBottomTabOverflow();
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -85,7 +87,7 @@ const HomeScreen = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView className="flex-1" >
       <MasonryList posts={pins} refreshing={refreshing} onRefresh={onRefresh} />
     </SafeAreaView>
   );

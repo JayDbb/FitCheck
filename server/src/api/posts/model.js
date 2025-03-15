@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+
 const postSchema = new mongoose.Schema({
     writterID: String,
     createdDate: String,
@@ -14,8 +14,18 @@ const postSchema = new mongoose.Schema({
     type: String,
     imageURL: String,
     caption: String,
+    searchTags: [String],
+    AIrating: Number,
+    category: String
 });
 
+
 const Post = mongoose.model('Posts', postSchema);
+Post.collection.createIndex({ searchTags: "text", caption: "text", category: "text" });
+
+// Create text index for searchTags
+// Post.collection.dropIndex("searchTags_text_caption_text").then(() => {
+// });
+
 
 module.exports = Post;

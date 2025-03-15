@@ -1,10 +1,17 @@
 const User = require('./model');
 
 const createUser = async (req, res) => {
-    const { name, email, password } = req.body;
+    const { username, email, password, accessToken } = req.body;
 
-    
-    res.status(201).json(user);
+    const user = await User.create({
+        username,
+        email,
+        password
+    });
+
+    const token = jwt.sign({ username }, accessToken);
+
+    res.status(201).json(token);
 }
 
 const getUser = async (req, res) => {

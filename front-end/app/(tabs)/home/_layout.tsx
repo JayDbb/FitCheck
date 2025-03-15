@@ -10,6 +10,7 @@ const HomeLayout = () => {
       <Stack.Screen
       name = "index"
       options={{
+        headerShown: false,
         title: "Home",
         headerTransparent: true,
         headerBlurEffect: "systemChromeMaterial",
