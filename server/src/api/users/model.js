@@ -4,7 +4,6 @@ const bcrypt = require('bcryptjs');
 const userSchema = new mongoose.Schema({
     username: String,
     profileImage: String,
-    followers: [{}],
     following: [{}]
 });
 
