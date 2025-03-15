@@ -1,11 +1,10 @@
-# CoLearn-Server📚
+# FitCheck-Server
 
 # Technologies
 Node.js + Express + Jest + MongoDB 
 
 ## Documentation
 - [Node JS Tutorial](https://www.w3schools.com/nodejs/)
-- [Jest Documentation](https://jestjs.io/docs/getting-started)
 - [MongoDB Documentation](https://www.mongodb.com/docs/drivers/node/current/usage-examples/)
 
 
