@@ -48,7 +48,7 @@ const MasonryGrid = ({
     // Serialize the details to pass as query parameters (you can pass specific fields)
     console.log("Navigating to details with id:", item.id, "title:", item.title, "image:", item.image);
 
-    router.push(`/home/details/${item.id}?title=${encodeURIComponent(item.title)}&image=${encodeURIComponent(item.image)}`);
+    // router.push(`/home/details/${item.id}?title=${encodeURIComponent(item.title)}&image=${encodeURIComponent(item.image)}`);
   };
   
 

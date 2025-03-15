@@ -142,6 +142,58 @@ const scanImage = async (req, res) => {
 };
 
 /**
+ * Gets AI-generated rating for an outfit based on an image.
+ * @body {string} imageUrl - The image URL to analyze.
+ * @body {string} category - The category of the outfit.
+ */
+const getAIrating = async (req, res) => {
+    const client = new OpenAI({
+        baseURL: 'https://openrouter.ai/api/v1',
+        apiKey: OPENROUTER_API_KEY,
+    });
+
+    try {
+        const { imageUrl, category } = req.body;
+
+        if (!imageUrl) {
+            return res.status(400).json({ message: 'No image provided' });
+        }
+
+        // Send request to OpenAI's GPT-4o model
+        const response = await client.chat.completions.create({
+            "model": "openai/gpt-4o",
+            "messages": [
+                {
+                    "role": "system",
+                    "content": "You are a fashion analysis expert. Your task is to evaluate outfits based on the provided image and a category given by the user. Analyze the outfit according to the following criteria:\n\n1. Fit with Category – Does the outfit align with the given category (e.g., formalwear, streetwear, casual, etc.)?\n2. Color Harmony – Are the colors well-matched and aesthetically pleasing?\n3. Trendy Factor – Does the outfit align with current fashion trends?\n4. Accessory Matching – Do the accessories complement the outfit well?\n5. Overall Aesthetic Score – General impression of the outfit's coherence and appeal.\n\nProvide a final rating out of 5 based on the above factors. Output only the numerical rating (e.g., '4.2', '3.0', '5', etc.), without any extra text, commentary, or explanation."
+                },
+                {
+                    "role": "user",
+                    "content": [
+                        { "type": "text", "text": `Category: ${category}\nRate this outfit based on the provided category. Only return a single number (out of 5) that reflects the overall score based on fit, color harmony, trendiness, accessory matching, and aesthetics. Do not include any extra text or explanation—just the number.` },
+                        { "type": "image_url", "image_url": imageUrl }
+                    ]
+                }
+            ],
+            "max_tokens": 10
+        }, {
+            headers: {
+                'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const aiResponse = response.choices[0].message.content;
+        res.status(200).json({ rating: aiResponse });
+
+    } catch (error) {
+        console.error('Error getting AI rating:', error);
+        res.status(500).json({ message: 'Error getting AI rating', error: error.message });
+    }
+};
+
+
+/**
  * Deletes a post.
  * @body {string} postID - The ID of the post to delete.
  */
@@ -239,6 +291,7 @@ module.exports = {
     addComment,
     addRating,
     getUserPosts,
+    getAIrating,
     scanImage,
     searchPosts
 };
