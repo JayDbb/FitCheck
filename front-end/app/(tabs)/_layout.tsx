@@ -30,7 +30,7 @@ export default function TabLayout() {
           title: "Home",
           tabBarIcon: ({ color }) => (
             <SymbolView
-              name="movieclapper.fill"
+              name="house.fill"
               type="hierarchical"
               tintColor={color}
               size={30}
@@ -55,12 +55,27 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="post"
+        name="create"
         options={{
-          title: "Post",
+          title: "Create",
           tabBarIcon: ({ color }) => (
             <SymbolView
-              name="popcorn.fill"
+              name="plus"
+              type="hierarchical"
+              tintColor={color}
+              size={30}
+            />
+          ),
+        }}
+      />
+
+<Tabs.Screen
+        name="profile"
+        options={{
+          title: "Profile",
+          tabBarIcon: ({ color }) => (
+            <SymbolView
+              name="person.crop.circle"
               type="hierarchical"
               tintColor={color}
               size={30}
