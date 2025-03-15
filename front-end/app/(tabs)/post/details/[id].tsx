@@ -1,12 +1,12 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-const CreateLayout = () => {
+const PostDetails = () => {
   return (
     <View>
-      <Text>CreateLayout</Text>
+      <Text>PostDetails</Text>
     </View>
   )
 }
 
-export default CreateLayout
+export default PostDetails

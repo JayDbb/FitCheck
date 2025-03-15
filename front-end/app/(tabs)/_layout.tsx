@@ -1,4 +1,4 @@
-import { Tabs } from "expo-router";
+import { router, Tabs } from "expo-router";
 import { Platform, useColorScheme, StyleSheet } from "react-native";
 import { BlurView } from "expo-blur";
 import { hapticTab } from "@/components/ui/utils/haptic-tab";
@@ -11,18 +11,16 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
   return (
     <Tabs
-    
-    screenOptions={{
-      tabBarButton: hapticTab,
-      headerShown: false,
-      tabBarBackground: BlurTabBarBackground,
-      tabBarStyle: {
-        // Use a transparent background on iOS to show the blur effect
-        position: "absolute",
-        backgroundColor: 'transparent'
-      },
-
-    }}
+      screenOptions={{
+        tabBarButton: hapticTab,
+        headerShown: false,
+        tabBarBackground: BlurTabBarBackground,
+        tabBarStyle: {
+          // Use a transparent background on iOS to show the blur effect
+          position: "absolute",
+          backgroundColor: "transparent",
+        },
+      }}
     >
       <Tabs.Screen
         name="home"
@@ -67,9 +65,15 @@ export default function TabLayout() {
             />
           ),
         }}
+        listeners={{
+          tabPress: (e) => {
+            e.preventDefault();
+            router.push("/(modal)/post");
+          },
+        }}
       />
 
-<Tabs.Screen
+      <Tabs.Screen
         name="profile"
         options={{
           title: "Profile",

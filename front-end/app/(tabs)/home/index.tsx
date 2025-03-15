@@ -1,49 +1,30 @@
-import { View, Text } from "react-native";
+import { View, Text, Image } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { BodyScrollView } from "@/components/ui/utils/body-scroll-view";
-import MasonryList from "react-native-masonry-list";
+import { MasonryFlashList } from "@shopify/flash-list";
 
-
-const data = [
-
-    {
-      uri: "https://luehangs.site/pic-chat-app-images/beautiful-blond-blonde-hair-478544.jpg",
-    },
-    {
-      source: {
-        uri: "https://luehangs.site/pic-chat-app-images/beautiful-beautiful-women-beauty-40901.jpg",
-      },
-    },
-    {
-      uri: "https://luehangs.site/pic-chat-app-images/animals-avian-beach-760984.jpg",
-      dimensions: { width: 1080, height: 1920 },
-    },
-    {
-      URI: "https://luehangs.site/pic-chat-app-images/beautiful-blond-fishnet-stockings-48134.jpg",
-      id: "blpccx4cn",
-    },
-    {
-      url: "https://luehangs.site/pic-chat-app-images/beautiful-beautiful-woman-beauty-9763.jpg",
-    },
-    {
-      URL: "https://luehangs.site/pic-chat-app-images/attractive-balance-beautiful-186263.jpg",
-    },
-  ];
-  
-
-  
+const DATA = [
+  {
+    title: "First Item",
+    id: "1",
+  },
+  {
+    title: "Second Item",
+    id: "2",
+  },
+];
 
 const HomeScreen = () => {
   return (
-<SafeAreaView className = "flex-1 ">
-
-
-
-      <MasonryList
-       images={data}
+    <SafeAreaView className="flex-1">
+      <MasonryFlashList
+        data={DATA}
+        numColumns={2}
+        renderItem={({ item }) => <Text>{item.title}</Text>}
+        keyExtractor={(item) => item.id}
+        estimatedItemSize={200}
       />
-</SafeAreaView>
+    </SafeAreaView>
   );
 };
 
