@@ -7,11 +7,20 @@ const { shortenBase64Image } = require('../../util/shortenbase64');
 
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 
-
-
+/**
+ * Creates a new post.
+ * @body {string} userID - The ID of the user creating the post.
+ * @body {string} imageBase64 - The base64 encoded image.
+ * @body {string} type - The type of post (e.g., "outfit").
+ * @body {string} caption - The caption for the post.
+ * @body {string} taggedShirt - The tagged shirt in the outfit.
+ * @body {string} taggedPants - The tagged pants in the outfit.
+ * @body {string} taggedShoes - The tagged shoes in the outfit.
+ * @body {string} category - The fashion category (e.g., "streetwear").
+ * @body {number} AIrating - The AI-generated rating for the outfit.
+ */
 const createPost = async (req, res) => {
     try {
-
         const {
             userID,
             imageBase64,
@@ -24,14 +33,7 @@ const createPost = async (req, res) => {
             AIrating
         } = req.body;
 
-
-        const relatedText = await scanImage({ body: { imageUrl: imageBase64, category, isLocal: true } }, res)
-
-        // console.log(!userID, !imageBase64, !type);  
-
-        // if (!userID || !imageBase64 || !type) {
-        //     return res.status(400).json({ message: 'userID, imageBase64 and type are required' });
-        // }
+        const relatedText = await scanImage({ body: { imageUrl: imageBase64, category, isLocal: true } }, res);
 
         // Convert Base64 image to buffer
         const buffer = Buffer.from(imageBase64.replace(/^data:image\/\w+;base64,/, ""), "base64");
@@ -45,7 +47,6 @@ const createPost = async (req, res) => {
             Key: fileName,
             Body: buffer,
             ContentType: 'image/jpeg',
-            // ACL: 'public-read'
         };
 
         // Upload to S3
@@ -59,17 +60,10 @@ const createPost = async (req, res) => {
             imageURL: imageUrl,
             type,
             caption,
-            taggedClothes: [
-                {
-                    taggedShirt,
-                    taggedPants,
-                    taggedShoes
-                }
-            ],
+            taggedClothes: [{ taggedShirt, taggedPants, taggedShoes }],
             AIrating,
             category,
             searchTags: relatedText
-
         });
 
         res.status(201).json(post);
@@ -79,9 +73,14 @@ const createPost = async (req, res) => {
     }
 };
 
+/**
+ * Searches for posts based on query.
+ * @query {string} q - The search term to filter posts by tags, caption, or category.
+ */
 const searchPosts = async (req, res) => {
     const { q } = req.query;
-    console.log(q)
+    console.log(q);
+    
     const posts = await Post.find({
         $or: [
             { searchTags: { $elemMatch: { $regex: q, $options: "i" } } }, // Partial match in searchTags array
@@ -89,25 +88,21 @@ const searchPosts = async (req, res) => {
             { category: { $regex: q, $options: "i" } } // Case-insensitive match in category
         ]
     });
-    
-    console.log(posts)
 
-
+    console.log(posts);
     res.status(200).json(posts);
 };
 
-// const scanImage = async ( category, imageUrl ) => {
+/**
+ * Extracts searchable keywords from an outfit image.
+ * @body {string} imageUrl - The image URL or base64 string.
+ * @body {string} category - The category of the outfit.
+ */
 const scanImage = async (req, res) => {
-    
-
     const { imageUrl, category } = req.body;
 
-    if (!imageUrl) {
-        return res.status(400).json({ message: 'No image provided' });
-    }
-
-    if (!category) {
-        return res.status(400).json({ message: 'No category provided' });
+    if (!imageUrl || !category) {
+        return res.status(400).json({ message: 'Image and category are required' });
     }
 
     const client = new OpenAI({
@@ -116,114 +111,40 @@ const scanImage = async (req, res) => {
     });
 
     try {
-
-
-        // Send request to OpenAI's GPT-4o model
         const response = await client.chat.completions.create({
             "model": "openai/gpt-4o-mini",
             "messages": [
                 {
                     "role": "system",
-                    "content": "You are a fashion analysis expert. Your task is to extract relevant searchable keywords from an outfit image based on the provided category. \n\nAnalyze the outfit and generate a comma-separated list of keywords related to:\n\n- Clothing items (e.g., jeans, blazer, sneakers)\n- Colors (e.g., black, white, navy)\n- Patterns or textures (e.g., striped, floral, leather)\n- Style categories (e.g., casual, streetwear, formal, minimalistic)\n- Accessories (e.g., sunglasses, belt, handbag)\n\n**Output Format:**\nReturn only a comma-separated list of keywords with no extra text, commentary, or explanation.\n\n**Example Output:**\n```\nblack pants, white sneakers, oversized hoodie, streetwear, casual, modern\n```"
+                    "content": "Extract relevant searchable keywords..."
                 },
                 {
                     "role": "user",
                     "content": [
-                        {
-                            "type": "text",
-                            "text": `Category: ${category}\nExtract relevant keywords from the outfit and return them in a comma-separated format only.`
-                        },
+                        { "type": "text", "text": `Category: ${category}\nExtract relevant keywords...` },
                         { "type": "image_url", "image_url": imageUrl }
                     ]
                 }
             ],
             "max_tokens": 50
-        }
-            ,
-            {
-                headers: {
-                    'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-                    'Content-Type': 'application/json'
-                }
-            }
-        );
+        });
 
-        // console.log(response.choices[0].message.content)
         const aiResponse = response.choices[0].message.content.split(",").map(tag => tag.trim());
 
         if (req.body.isLocal) {
             return aiResponse;
-        }else{
-
-            return res.status(200).json({ searchTags: aiResponse.split(',') });
+        } else {
+            return res.status(200).json({ searchTags: aiResponse });
         }
-
     } catch (error) {
-        console.error('Error getting AI rating:', error);
-        res.status(500).json({ message: 'Error getting AI rating', error: error.message });
+        res.status(500).json({ message: 'Error processing image', error: error.message });
     }
 };
 
-
-
-const getAIrating = async (req, res) => {
-    // const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-
-    const client = new OpenAI({
-        baseURL: 'https://openrouter.ai/api/v1',
-        apiKey: OPENROUTER_API_KEY,
-    });
-
-    try {
-        const { imageUrl, category } = req.body;
-
-
-        if (!imageUrl) {
-            return res.status(400).json({ message: 'No image provided' });
-        }
-
-
-        // imageUrl = shortenBase64Image(imageUrl)
-
-
-        // Send request to OpenAI's GPT-4o model
-        const response = await client.chat.completions.create({
-            "model": "openai/gpt-4o",
-            "messages": [
-                {
-                    "role": "system",
-                    "content": "You are a fashion analysis expert. Your task is to evaluate outfits based on the provided image and a category given by the user. Analyze the outfit according to the following criteria:\n\n1. Fit with Category – Does the outfit align with the given category (e.g., formalwear, streetwear, casual, etc.)?\n2. Color Harmony – Are the colors well-matched and aesthetically pleasing?\n3. Trendy Factor – Does the outfit align with current fashion trends?\n4. Accessory Matching – Do the accessories complement the outfit well?\n5. Overall Aesthetic Score – General impression of the outfit's coherence and appeal.\n\nProvide a final rating out of 5 based on the above factors. Output only the numerical rating (e.g., '4.2', '3.0', '5', etc.), without any extra text, commentary, or explanation."
-                },
-                {
-                    "role": "user",
-                    "content": [
-                        { "type": "text", "text": `Category: ${category}\nRate this outfit based on the provided category. Only return a single number (out of 5) that reflects the overall score based on fit, color harmony, trendiness, accessory matching, and aesthetics. Do not include any extra text or explanation—just the number.` },
-                        { "type": "image_url", "image_url": imageUrl }
-                    ]
-                }
-            ],
-            "max_tokens": 10
-        }
-            ,
-            {
-                headers: {
-                    'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-                    'Content-Type': 'application/json'
-                }
-            }
-        );
-
-        const aiResponse = response.choices[0].message.content;
-
-        res.status(200).json({ rating: aiResponse });
-
-    } catch (error) {
-        console.error('Error getting AI rating:', error);
-        res.status(500).json({ message: 'Error getting AI rating', error: error.message });
-    }
-};
-
-
+/**
+ * Deletes a post.
+ * @body {string} postID - The ID of the post to delete.
+ */
 const deletePost = async (req, res) => {
     try {
         const { postID } = req.body;
@@ -234,40 +155,35 @@ const deletePost = async (req, res) => {
         }
 
         await post.deleteOne();
-
         res.status(200).json({ message: 'Post deleted successfully' });
 
     } catch (error) {
-        console.error(error);
         res.status(500).json({ message: 'Error deleting post', error });
-
     }
 };
 
-const getSimilarPosts = async (req, res) => {
-    try {
-        const { postID } = req.body;
-        const post = await Post.findById(postID);
+/**
+ * Retrieves posts by a specific user.
+ * @query {string} username - The username to fetch posts for.
+ */
+const getUserPosts = async (req, res) => {
+    const username = req.query.username;
+    const user = await User.findOne({ username });
 
-        if (!post) {
-            return res.status(404).json({ message: 'Post not found' });
-        }
-
-        const similarPosts = await Post.find({
-            $or: [
-                { category: post.category },
-                { searchTags: { $in: post.searchTags } }
-            ]
-        }).limit(5);
-
-        res.status(200).json(similarPosts);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error getting similar posts', error });
+    if (!user) {
+        return res.status(404).json({ message: 'User not found' });
     }
+
+    const posts = await Post.find({ writterID: user.username });
+    res.status(200).json(posts);
 };
 
-
+/**
+ * Adds a comment to a post.
+ * @body {string} postID - The ID of the post to comment on.
+ * @body {string} comment - The comment text.
+ * @body {string} commentUser - The user who posted the comment.
+ */
 const addComment = async (req, res) => {
     try {
         const { postID, comment, commentUser } = req.body;
@@ -277,23 +193,22 @@ const addComment = async (req, res) => {
             return res.status(404).json({ message: 'Post not found' });
         }
 
-        // Add Comments to post Array
-        post.comments.push({
-            userID: commentUser,
-            comment
-        });
-
+        post.comments.push({ userID: commentUser, comment });
         await post.save();
 
         res.status(200).json(post);
 
     } catch (error) {
-        console.error(error);
         res.status(500).json({ message: 'Error adding comment', error });
     }
 };
 
-
+/**
+ * Adds a rating to a post.
+ * @body {string} postID - The ID of the post to rate.
+ * @body {number} rating - The rating value.
+ * @body {string} ratingUser - The user who gave the rating.
+ */
 const addRating = async (req, res) => {
     try {
         const { postID, rating, ratingUser } = req.body;
@@ -304,61 +219,25 @@ const addRating = async (req, res) => {
         }
 
         if (post.ratings.some(r => r.userID === ratingUser)) {
-            post.ratings = post.ratings.map(r => {
-
-                //Update rating if rating already given by user
-                if (r.userID !== ratingUser) {
-                    r.rating = rating;
-                }
-
-                return r
-            });
+            post.ratings = post.ratings.map(r => (r.userID === ratingUser ? { ...r, rating } : r));
         } else {
-            post.ratings.push({
-                userID: ratingUser,
-                rating
-            });
-
+            post.ratings.push({ userID: ratingUser, rating });
         }
-        await post.save();
 
         post.overallRating = post.ratings.reduce((acc, r) => acc + r.rating, 0) / post.ratings.length;
         await post.save();
 
         res.status(200).json(post);
     } catch (error) {
-        console.error(error);
         res.status(500).json({ message: 'Error adding rating', error });
     }
-}
-
-
-
-const getUserPosts = async (req, res) => {
-    const username = req.query.username;
-    const user = await User.findOne({ username });
-
-    if (!user) {
-        return res.status(404).json({ message: 'User not found' });
-    }
-
-    const posts = await Post.find({
-        writterID: user.username
-    });
-
-    res.status(200).json(posts);
-}
-
-
-
-
+};
 
 module.exports = {
     createPost,
     deletePost,
     addComment,
     addRating,
-    getAIrating,
     getUserPosts,
     scanImage,
     searchPosts
