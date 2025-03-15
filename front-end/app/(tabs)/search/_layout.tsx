@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native'
 import React from 'react'
-import { Stack } from 'expo-router'
+import { router, Stack } from 'expo-router'
 
 const SearchLayout = () => {
   return (
@@ -8,19 +8,28 @@ const SearchLayout = () => {
       headerShadowVisible: false,
     }}>
       <Stack.Screen
-      name = "index"
-      options={{
-        title: "Home",
+        name="index"
+        
+options={{
+  headerShadowVisible: false,
+        title: "Search",
         headerTransparent: true,
         headerBlurEffect: "systemChromeMaterial",
         headerLargeTitleShadowVisible: false,
-        headerShadowVisible: true,
+
         headerLargeStyle: {
           backgroundColor: "transparent",
         },
-      }}
+        headerSearchBarOptions: {
+          placeholder: "fits, inspirations",
+          onChangeText: (event) => {
+            router.setParams({ query: event.nativeEvent.text });
+          },
+        },
+    
+}}
+       
       />
-         
     </Stack>
          
   )

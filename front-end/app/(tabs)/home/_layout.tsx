@@ -15,9 +15,7 @@ const HomeLayout = () => {
         headerBlurEffect: "systemChromeMaterial",
         headerLargeTitleShadowVisible: false,
         headerShadowVisible: true,
-        headerLargeStyle: {
-          backgroundColor: "transparent",
-        },
+
       }}
       />
          
