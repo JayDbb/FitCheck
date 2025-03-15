@@ -79,10 +79,10 @@ const HomeScreen = () => {
 
   const onRefresh = () => {
     setRefreshing(true);
-    // Simulate data fetching or updating
+   
     setTimeout(() => {
       setRefreshing(false);
-      // Here you can update the `pins` state if you want to fetch new data
+      
     }, 2000);
   };
 
