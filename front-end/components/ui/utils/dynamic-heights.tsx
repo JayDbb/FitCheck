@@ -1,11 +1,14 @@
 import { ActivityIndicator, Image, StyleSheet } from "react-native";
 import { useState, useEffect } from "react";
+import Animated from "react-native-reanimated";
+
 
 interface DynamicHeightsProps {
   imageUri: string;
+  id: string;
 }
 
-const DynamicHeights = ({ imageUri }: DynamicHeightsProps) => {
+const DynamicHeights = ({ imageUri, id }: DynamicHeightsProps) => {
   const [ratio, setRatio] = useState(1);
 
 
@@ -24,10 +27,15 @@ const DynamicHeights = ({ imageUri }: DynamicHeightsProps) => {
   }
 
   return (
-    <Image
+
+
+
+    <Animated.Image
+    sharedTransitionTag={id}
       source={{ uri: imageUri }}
       style={[styles.image, { aspectRatio: ratio }]}
     />
+
   );
 };
 

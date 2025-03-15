@@ -1,11 +1,26 @@
 import { View, Text } from 'react-native'
 import React from 'react'
+import { Stack } from 'expo-router'
 
 const PostLayout = () => {
   return (
-    <View>
-      <Text>PostLayout</Text>
-    </View>
+    <Stack screenOptions={{
+      headerShadowVisible: false,
+    }}>
+      <Stack.Screen
+      name = "index"
+      options={{
+        headerShown: false,
+        title: "Home",
+        headerTransparent: true,
+        headerBlurEffect: "systemChromeMaterial",
+        headerLargeTitleShadowVisible: false,
+        headerShadowVisible: true,
+
+      }}
+      />
+         
+    </Stack>
   )
 }
 
