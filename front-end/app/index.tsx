@@ -2,6 +2,7 @@ import { View, Text, TextInput, TouchableOpacity, Alert, Pressable } from "react
 import React, { useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
+import axios from "axios";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -11,7 +12,18 @@ const Signup = () => {
   const router = useRouter();
 
   const onSubmit = async () => {
-
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/users/create",
+        {
+          username,
+          password
+        }
+      );
+      console.log("User created successfully:", response.data);
+    } catch (error:any) {
+      console.error("Error creating user:", error.response ? error.response.data : error.message);
+    }
   };
   return (
     <SafeAreaView className="h-full w-full bg-white">
@@ -22,21 +34,15 @@ const Signup = () => {
         <View className="pb-12">
           <Text className="text-lg font-semibold text-primary-200">Welcome !</Text>
           <View className="mt-8">
-            <Text className="text-4xl font-bold text-primary-200">
-              Sign up to create your Account
-            </Text>
-            <Text className="text-secondary-400 mt-4 font-medium font-base">
-              Enter your email and password to log in to your account
-            </Text>
+            <Text className="text-4xl font-bold text-primary-200">Sign up to create your Account</Text>
+            <Text className="text-secondary-400 mt-4 font-medium font-base">Enter your email and password to log in to your account</Text>
           </View>
         </View>
 
         {/* Google Login Button */}
         <View>
           <TouchableOpacity className="bg-primary-200 rounded-xl  h-[50px] w-full items-center justify-center  px-2">
-            <Text className="text-white text-lg font-bold">
-              Sign up with Google
-            </Text>
+            <Text className="text-white text-lg font-bold">Sign up with Google</Text>
           </TouchableOpacity>
         </View>
 
@@ -50,9 +56,9 @@ const Signup = () => {
         {/* Input Fields */}
         <View>
           <View className="mb-8">
-            <Text className = "text-secondary-400 font-medium  ">Email</Text>
+            <Text className="text-secondary-400 font-medium  ">Email</Text>
             <TextInput
-               className=" rounded-xl px-4 py-3 mt-2 h-[44px] bg-secondary-100"
+              className=" rounded-xl px-4 py-3 mt-2 h-[44px] bg-secondary-100"
               placeholder="Email"
               keyboardType="email-address"
               autoCapitalize="none"
@@ -63,9 +69,9 @@ const Signup = () => {
           </View>
 
           <View className="mb-8">
-            <Text className = "text-secondary-400 font-medium ">Username</Text>
+            <Text className="text-secondary-400 font-medium ">Username</Text>
             <TextInput
-               className=" rounded-xl px-4 py-3 mt-2 h-[44px] bg-secondary-100"
+              className=" rounded-xl px-4 py-3 mt-2 h-[44px] bg-secondary-100"
               placeholder="Username"
               autoCapitalize="none"
               autoComplete="username"
@@ -75,9 +81,9 @@ const Signup = () => {
           </View>
 
           <View>
-            <Text className = "text-secondary-400 font-medium ">Password</Text>
+            <Text className="text-secondary-400 font-medium ">Password</Text>
             <TextInput
-                className=" rounded-xl px-4 py-3 mt-2 h-[44px] bg-secondary-100"
+              className=" rounded-xl px-4 py-3 mt-2 h-[44px] bg-secondary-100"
               placeholder="Password"
               secureTextEntry
               autoCapitalize="none"
@@ -90,24 +96,24 @@ const Signup = () => {
 
         {/* Submit Button */}
         <View className="mt-8">
-          <TouchableOpacity onPress={onSubmit} className="bg-primary-200 rounded-xl h-[50px] w-full items-center justify-center  px-2">
+          <TouchableOpacity
+            onPress={onSubmit}
+            className="bg-yellow-400 rounded-xl h-[50px] w-full items-center justify-center  px-2"
+          >
             <Text className="text-white text-lg font-bold">Sign up</Text>
           </TouchableOpacity>
         </View>
 
-        <View className = "text-center flex-row justify-center items-center mt-8 gap-1  ">
-          <Text className="text-secondary-400 font-medium text-center ">
-            Already have an account?
-            </Text>
+        <View className="text-center flex-row justify-center items-center mt-8 gap-1  ">
+          <Text className="text-secondary-400 font-medium text-center ">Already have an account?</Text>
 
-            <Pressable
-              onPress={() => router.push("./login")}
-              className="text-center"
-            >
-              <Text className="text-center">Login</Text>
-            </Pressable>
-         
-          </View>
+          <Pressable
+            onPress={() => router.push("./login")}
+            className="text-center"
+          >
+            <Text className="text-center">Login</Text>
+          </Pressable>
+        </View>
       </View>
     </SafeAreaView>
   );
