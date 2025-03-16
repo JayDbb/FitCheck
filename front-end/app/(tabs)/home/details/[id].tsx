@@ -1,5 +1,5 @@
 import { View, Text, Image, Pressable } from "react-native";
-import React, { useRef, useCallback } from "react";
+import React, { useRef, useCallback, useState } from "react";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SymbolView } from "expo-symbols";
@@ -11,7 +11,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 // import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 
 const PostDetails = () => {
-  const { url } = useLocalSearchParams();
+  const { url, id } = useLocalSearchParams();
+
+  const [ratingScale, setRatingScale] = useState(0);
 
   // const bottomSheetRef = useRef<BottomSheet>(null);
 
@@ -23,14 +25,29 @@ const PostDetails = () => {
     const user = await AsyncStorage.getItem("token");
     return JSON.parse(user as string)?.token;
   };
+
   
-  const addRating = async () =>{
+  
+  const addRating = async (rating: number) =>{
+    setRatingScale(rating);
+
+    const tokens = await token();
+    
+    const response = await axios.get(
+      `${apiUrl}/users/get`,
+      {
+        headers: { Authorization: `Bearer ${tokens}` },
+      }
+    );
+    
     axios.post(`${apiUrl}/posts/add-rating`, {
-        
+      postID: id,
+      rating,
+      ratingUser: response.data.username,
     }, {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${await token()}`,
+        Authorization: `Bearer ${tokens}`,
       },
     })
   }
@@ -42,12 +59,14 @@ const PostDetails = () => {
           headerShown: false,
         }}
       />
-
+  
       <Image
         source={{ uri: Array.isArray(url) ? url[0] : url }}
         style={{ width: "100%", height: "80%" }}
       />
-<RatingSlider rating={0} onRatingChange={()=>{ }} />
+      <View className="w-full flex -ml-24">
+        <RatingSlider rating={ratingScale} onRatingChange={()=>{addRating(ratingScale)}} />
+      </View>
 
       {/* Bottom Sheet */}
       {/* <BottomSheet ref={bottomSheetRef} index={-1} snapPoints={["50%"]}>
