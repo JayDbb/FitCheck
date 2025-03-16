@@ -1,15 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  Image,
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  InputAccessoryView,
-  StyleSheet,
-} from "react-native";
+import { View, Text, TextInput, Image, Alert, KeyboardAvoidingView, Platform, InputAccessoryView, StyleSheet } from "react-native";
 import { Pressable } from "react-native";
 import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
@@ -22,7 +12,7 @@ const PostModal = () => {
   const [category, setCategory] = useState("");
 
   const [tags, setTags] = useState<string[]>([]);
-  const [tagInput, setTagInput] = useState('');
+  const [tagInput, setTagInput] = useState("");
   const [imageBase64, setImageBase64] = useState("");
   const [imageUri, setImageUri] = useState("");
   const inputAccessoryViewID = "uniqueID";
@@ -34,8 +24,7 @@ const PostModal = () => {
 
   const handleImagePick = async () => {
     try {
-      const permissionResult =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (!permissionResult.granted) {
         alert("Permission to access media library is required!");
         return;
@@ -68,18 +57,16 @@ const PostModal = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:8081/create-post', {
+      const response = await axios.post("http://localhost:8081/create-post", {
         type,
         category,
         tags,
         imageBase64,
-        caption : "",
-        "taggedShirt":"",
+        caption: "",
+        "taggedShirt": "",
         "taggedPants": "",
         "taggedShoes": "",
         "AIrating": 4.0,
-        
-        
       });
 
       Alert.alert("Success", "Post created successfully!");
@@ -104,7 +91,6 @@ const PostModal = () => {
     setTags(tags.filter((_, i) => i !== index));
   };
 
-
   return (
     <View className="p-4">
       <View className="flex-row items-start mb-4  border-gray-300 pb-4">
@@ -121,20 +107,23 @@ const PostModal = () => {
             inputAccessoryViewID={inputAccessoryViewID}
           />
 
-{imageUri ? (
-        <Image
-          source={{ uri: imageUri }}
-          className=" rounded-md mt-2"
-          style={{
-            width: "100%",
-            height: 200,
-            borderRadius: 6,
-          }}
-        />
-      ) : null}
+          {imageUri ? (
+            <Image
+              source={{ uri: imageUri }}
+              className=" rounded-md mt-2"
+              style={{
+                width: "100%",
+                height: 200,
+                borderRadius: 6,
+              }}
+            />
+          ) : null}
 
           <View className="flex-row gap-4">
-            <Pressable onPress={handleImagePick} className="mt-3 p-2">
+            <Pressable
+              onPress={handleImagePick}
+              className="mt-3 p-2"
+            >
               <SymbolView
                 name="photo.on.rectangle.angled.fill"
                 type="hierarchical"
@@ -142,8 +131,15 @@ const PostModal = () => {
               />
             </Pressable>
 
-            <Pressable onPress={handleImagePick} className="mt-3 p-2">
-              <SymbolView name="camera" type="hierarchical" size={30} />
+            <Pressable
+              onPress={handleImagePick}
+              className="mt-3 p-2"
+            >
+              <SymbolView
+                name="camera"
+                type="hierarchical"
+                size={30}
+              />
             </Pressable>
           </View>
         </View>
