@@ -12,6 +12,7 @@ import React, { useEffect, useState } from "react";
 import MasonryList from "@/components/ui/masonry-grid";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import RatingSlider from "@/components/ui/rating-slider";
 
 const ProfileScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
@@ -87,6 +88,9 @@ const ProfileScreen = () => {
     fetchPosts();
   }, []);
 
+
+
+
   return (
     <SafeAreaView className="px-4 pt-2">
       <ScrollView>
@@ -147,6 +151,8 @@ const ProfileScreen = () => {
         <View>
           <MasonryList posts={posts} />
         </View>
+
+     
       </ScrollView>
     </SafeAreaView>
   );

@@ -156,7 +156,7 @@ const PostModal = () => {
               className=" rounded-md mt-2"
               style={{
                 width: "100%",
-                height: 200,
+                height: "100%",
                 borderRadius: 6,
               }}
             />
