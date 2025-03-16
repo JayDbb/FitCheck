@@ -50,7 +50,7 @@ const createPost = async (req, res) => {
         const uploadResult = await s3.upload(uploadParams).promise();
         const imageUrl = uploadResult.Location;
 
-    
+        console.log(userID,"<--")
         const post = await Post.create({
             writterID: userID,
             createdDate: new Date().toISOString(),

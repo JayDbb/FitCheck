@@ -1,39 +1,11 @@
-import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, Pressable } from "react-native";
+import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, Pressable, SafeAreaView } from "react-native";
 import React, { useEffect, useState } from "react";
 import MasonryList from "@/components/ui/masonry-grid";
 import axios from "axios";
 
-const pins = [
-  {
-    id: "0",
-    image: "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/pinterest/0.jpeg",
-    title: "notJust Dev Hoodie",
-  },
-  {
-    id: "1",
-    image: "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/pinterest/1.jpeg",
-    title: "Programmer working on laptop computer in office studio",
-  },
-  {
-    id: "2",
-    image: "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/pinterest/2.jpeg",
-    title: "computer setup | computer setup idea | black wallpaper #computersetupideas",
-  },
-  {
-    id: "3",
-    image: "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/pinterest/3.jpeg",
-    title: "",
-  },
-  {
-    id: "4",
-    image: "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/pinterest/4.jpeg",
-    title: "White Tesla ",
-  },
-];
-
 const ProfileScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
-
+  const [posts, setPosts] = useState([]);
   const onRefresh = () => {
     setRefreshing(true);
 
@@ -45,12 +17,19 @@ const ProfileScreen = () => {
   useEffect(() => {
     const fetchPosts = async (username: string) => {
       axios.get(`http://localhost:3000/posts/get-posts?username=${username}`).then((response) => {
-        console.log(response.data);
+        console.log(response.data,"results");
+        const fetchedPosts = response.data.map((post: any) => ({
+          id: post._id,
+          image: post.imageURL,
+        }));
+        setPosts(fetchedPosts);
+
+
       }).catch((error) => {
         console.error(error);
       });
     };
-    fetchPosts("JamarTG");
+    fetchPosts("JamariTheGreat");
   }, []);
 
   return (
@@ -72,16 +51,16 @@ const ProfileScreen = () => {
         <Text style={styles.bioText}>Fashion enthusiast. Love to share my daily outfits and style tips!</Text>
       </View>
       <View>
+
         <Text style={styles.galleryTitle}>Latest Post of JamarTG</Text>
-        <ScrollView horizontal>
-          {/* <SafeAreaView className="flex-1"> */}
+
+          <SafeAreaView className="flex-1">
           <MasonryList
-            posts={pins}
+            posts={posts}
             refreshing={refreshing}
             onRefresh={onRefresh}
           />
-          {/* </SafeAreaView> */}
-        </ScrollView>
+          </SafeAreaView>
       </View>
     </ScrollView>
   );

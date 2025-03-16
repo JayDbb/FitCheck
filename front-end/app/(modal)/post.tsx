@@ -40,7 +40,7 @@ const PostModal = () => {
 
     try {
       const response = await axios.post('http://localhost:3000/posts/create-post', {
-        userId: "JamariTheGreat",
+        userID: "JamariTheGreat",
         type,
         category,
         tags,
