@@ -8,23 +8,18 @@ const jwt = require("jsonwebtoken");
  * @returns {string} JWT token upon successful user creation.
  */
 const createUser = async (req, res) => {
-    const { username, password } = req.body;
-    const tempUser = await User.findOne({ username });
+  const { username, password } = req.body;
+  const tempUser = await User.findOne({ username });
 
-    if (tempUser) {
-        return res.status(400).json({ message: 'User exists' });
-    }
+  if (tempUser) {
+      return res.status(400).json({ message: 'User exists' });
+  }
 
-    await User.create({
-        username,
-        password
-    });
+  await User.create({ username, password }); 
 
-
-    const token = jwt.sign({ username }, process.env.TOKEN_SECRET, { expiresIn: "7d" });
-
-    res.status(201).json(token);
-}
+  const token = jwt.sign({ username }, process.env.TOKEN_SECRET, { expiresIn: "7d" });
+  res.status(201).json({ token });
+};
 
 
 /**
