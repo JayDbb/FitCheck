@@ -31,21 +31,8 @@ const Signup = () => {
           </View>
         </View>
 
-        {/* Google Login Button */}
-        <View>
-          <TouchableOpacity className="bg-primary-200 rounded-xl  h-[50px] w-full items-center justify-center  px-2">
-            <Text className="text-white text-lg font-bold">
-              Sign up with Google
-            </Text>
-          </TouchableOpacity>
-        </View>
 
-        {/* Divider */}
-        <View className="flex-row items-center my-6">
-          <View className="flex-1 border-[0.5px] border-secondary-300"></View>
-          <Text className="mx-4 text-black font-medium">or</Text>
-          <View className="flex-1 border-[0.5px] border-secondary-300"></View>
-        </View>
+
 
         {/* Input Fields */}
         <View>
@@ -95,19 +82,7 @@ const Signup = () => {
           </TouchableOpacity>
         </View>
 
-        <View className = "text-center flex-row justify-center items-center mt-8 gap-1  ">
-          <Text className="text-secondary-400 font-medium text-center ">
-            Already have an account?
-            </Text>
 
-            <Pressable
-              onPress={() => router.push("./login")}
-              className="text-center"
-            >
-              <Text className="text-center">Login</Text>
-            </Pressable>
-         
-          </View>
       </View>
     </SafeAreaView>
   );
