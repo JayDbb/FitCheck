@@ -2,6 +2,9 @@ import { View, Text, TextInput, TouchableOpacity, Alert, Pressable } from "react
 import React, { useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
+import { apiUrl } from "@/config";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -11,6 +14,26 @@ const Signup = () => {
   const router = useRouter();
 
   const onSubmit = async () => {
+
+    setLoading(true);
+    try {
+
+      const response = await axios.post(`${apiUrl}/auth/register`, {
+        username,
+        password
+      });
+
+      console.log(response.data);
+      await AsyncStorage.setItem("token", response.data.token);
+      Alert.alert("Success", "User registered successfully!");
+      // router.push("/(tabs)/home");
+
+    } catch (error) {
+      console.error("Error registering user:", error);
+      Alert.alert("Error", "There was an error registering your user.");
+    } finally {
+      setLoading(false);
+    }
 
   };
   return (
@@ -36,18 +59,7 @@ const Signup = () => {
 
         {/* Input Fields */}
         <View>
-          <View className="mb-8">
-            <Text className = "text-secondary-400 font-medium  ">Email</Text>
-            <TextInput
-               className=" rounded-xl px-4 py-3 mt-2 h-[44px] bg-secondary-100"
-              placeholder="Email"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoComplete="email"
-              value={email}
-              onChangeText={setEmail}
-            />
-          </View>
+          
 
           <View className="mb-8">
             <Text className = "text-secondary-400 font-medium ">Username</Text>
