@@ -1,6 +1,5 @@
 # FitCheck+
 
-
 ## Overview  
 **FitCheck+** is an AI-powered fashion assistant that helps users get instant outfit ratings, receive community feedback, discover trending styles, and shop their favorite looks seamlessly.
 
