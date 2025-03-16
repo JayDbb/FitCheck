@@ -27,6 +27,8 @@ const PostModal = () => {
   const [imageBase64, setImageBase64] = useState("");
   const [imageUri, setImageUri] = useState("");
   const [aiRating, setAiringRating] = useState(0);
+  const [caption, setCaption] = useState("");
+
   const inputAccessoryViewID = "uniqueID";
 
   const userID = async () => {
@@ -61,11 +63,16 @@ const PostModal = () => {
         const base64 = await FileSystem.readAsStringAsync(uri, {
           encoding: FileSystem.EncodingType.Base64,
         });
+
+        // Log the first 100 characters of base64 to verify format
+        console.log("Base64 image data (first 100 chars):", base64.substring(0, 100));
         
-        setImageBase64(base64);
+        // Ensure proper base64 image format with data URI prefix
+        const formattedBase64 = `data:image/jpeg;base64,${base64}`;
+        setImageBase64(formattedBase64);
 
         const response = await axios.post(`${apiUrl}/posts/get-ai-rating`, {
-          base64,
+          base64: formattedBase64,
         }, {
           headers: {
             "Content-Type": "application/json",
@@ -88,18 +95,17 @@ const PostModal = () => {
     // }
 
     try {
+
+      console.log(imageBase64);
       const response = await axios.post(`${apiUrl}/posts/create-post`, {
-        type: "public",
-        category: "casual",
-        // tags,
-        imageBase64,
-        caption : "",
-        "taggedShirt":"",
-        "taggedPants": "",
-        "taggedShoes": "",
+        "type": "public",
+        "caption": caption,
+        "taggedShirt": "Black Oversized Hoodie",
+        "taggedPants": "Slim Fit Jeans",
+        "taggedShoes": "White Sneakers",
+        "category": "casual",
         "AIrating": 4.0,
-        
-        
+        "imageBase64": imageBase64
       },
       {
         headers: {
@@ -114,7 +120,7 @@ const PostModal = () => {
       console.log(response.data);
     } catch (error) {
       console.error(error);
-      Alert.alert("Error", "There was an error creating your post.");
+      // Alert.alert("Error", "There was an error creating your post.");
       Alert.alert("Error", "There was an error creating your post.");
     }
   };
@@ -141,9 +147,10 @@ const PostModal = () => {
         <View className="flex-1 ml-3">
           <Text className="font-bold text-base">cajaun</Text>
           <TextInput
-            className="text-base max-h-24"
+            className="text-base max-h-24 text-white"
             placeholder="What's new?"
             multiline
+            onChangeText={setCaption}
             inputAccessoryViewID={inputAccessoryViewID}
           />
 
