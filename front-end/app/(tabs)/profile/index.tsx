@@ -1,6 +1,7 @@
 import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, Pressable } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MasonryList from "@/components/ui/masonry-grid";
+import axios from "axios";
 
 const pins = [
   {
@@ -40,6 +41,17 @@ const ProfileScreen = () => {
       setRefreshing(false);
     }, 2000);
   };
+
+  useEffect(() => {
+    const fetchPosts = async (username: string) => {
+      axios.get(`http://localhost:3000/posts/get-posts?username=${username}`).then((response) => {
+        console.log(response.data);
+      }).catch((error) => {
+        console.error(error);
+      });
+    };
+    fetchPosts("JamarTG");
+  }, []);
 
   return (
     <ScrollView>
