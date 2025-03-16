@@ -21,7 +21,7 @@ const postSchema = new mongoose.Schema({
 
 
 const Post = mongoose.model('Posts', postSchema);
-Post.collection.createIndex({ searchTags: "text", caption: "text", category: "text" });
+// Post.collection.createIndex({ searchTags: "text", caption: "text", category: "text" });
 
 // Create text index for searchTags
 // Post.collection.dropIndex("searchTags_text_caption_text").then(() => {
