@@ -1,27 +1,40 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Image, StyleSheet, Alert } from 'react-native';
-import axios from 'axios';
-import * as ImagePicker from 'expo-image-picker';
-import * as FileSystem from 'expo-file-system';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  Image,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  InputAccessoryView,
+  StyleSheet,
+} from "react-native";
+import { Pressable } from "react-native";
+import axios from "axios";
+import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from "expo-file-system";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SymbolView } from "expo-symbols";
 
 const PostModal = () => {
-  const [type, setType] = useState('');
-  const [category, setCategory] = useState('');
-  const [imageBase64, setImageBase64] = useState('');
-  const [imageUri, setImageUri] = useState('');
+  const [type, setType] = useState("");
+  const [category, setCategory] = useState("");
+  const [imageBase64, setImageBase64] = useState("");
+  const [imageUri, setImageUri] = useState("");
+  const inputAccessoryViewID = "uniqueID";
 
   const userID = async () => {
-    const user = await AsyncStorage.getItem('user');
+    const user = await AsyncStorage.getItem("user");
     return JSON.parse(user as string)?.id;
   };
 
-
   const handleImagePick = async () => {
     try {
-      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      const permissionResult =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (!permissionResult.granted) {
-        alert('Permission to access media library is required!');
+        alert("Permission to access media library is required!");
         return;
       }
 
@@ -35,97 +48,103 @@ const PostModal = () => {
         const uri = result.assets[0].uri;
         setImageUri(uri);
 
-        // Convert the selected image to base64
         const base64 = await FileSystem.readAsStringAsync(uri, {
           encoding: FileSystem.EncodingType.Base64,
         });
-        setImageBase64(base64);  // Set the base64 string
+        setImageBase64(base64);
       }
     } catch (error) {
-      console.error('Error picking image:', error);
+      console.error("Error picking image:", error);
     }
   };
 
-
   const handleSubmit = async () => {
     if (!type || !category || !imageBase64) {
-      Alert.alert('Error', 'Please provide type, category, and an image.');
+      Alert.alert("Error", "Please provide type, category, and an image.");
       return;
     }
 
     try {
-      const response = await axios.post('http://localhost:3000/posts/create-post', {
-        type,
-        category,
-        imageBase64,
-        caption : "",
-        "taggedShirt":"",
-        "taggedPants": "",
-        "taggedShoes": "",
-        "AIrating": 4.0,
-        userID
-        
-      });
+      const response = await axios.post(
+        "http://localhost:8081/posts/create-post",
+        {
+          type,
+          category,
+          imageBase64,
+          caption: "",
+          taggedShirt: "",
+          taggedPants: "",
+          taggedShoes: "",
+          AIrating: 4.0,
+          userID,
+        }
+      );
 
-      Alert.alert('Success', 'Post created successfully!');
-      console.log(response.data); 
+      Alert.alert("Success", "Post created successfully!");
+      console.log(response.data);
     } catch (error) {
       console.error(error);
-      Alert.alert('Error', 'There was an error creating your post.');
+      Alert.alert("Error", "There was an error creating your post.");
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Create a New Post</Text>
-      
-      <TextInput
-        style={styles.input}
-        placeholder="Post Type"
-        value={type}
-        onChangeText={setType}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Category"
-        value={category}
-        onChangeText={setCategory}
-      />
+    <View className="p-4">
+      <View className="flex-row items-center mb-4  border-gray-300 pb-4">
+        <Image
+          source={{ uri: "https://picsum.photos/seed/696/3000/2000" }}
+          className="h-10 w-10 rounded-full"
+        />
+        <View className="flex-1 ml-3">
+          <Text className="font-bold text-base">Username</Text>
+          <TextInput
+            className="text-base max-h-24"
+            placeholder="What's new?"
+            multiline
+            inputAccessoryViewID={inputAccessoryViewID}
+          />
 
-      {/* Image Selection Button */}
-      <Button title="Pick an Image" onPress={handleImagePick} />
+          <View className="flex-row gap-4">
+            <Pressable onPress={handleImagePick} className="mt-3 p-2">
+              <SymbolView
+                name="photo.on.rectangle.angled.fill"
+                type="hierarchical"
+                size={30}
+              />
+            </Pressable>
+
+            <Pressable onPress={handleImagePick} className="mt-3 p-2">
+              <SymbolView name="camera" type="hierarchical" size={30} />
+            </Pressable>
+          </View>
+        </View>
+      </View>
+
       {imageUri ? (
-        <Image source={{ uri: imageUri }} style={styles.imagePreview} />
+        <Image
+          source={{ uri: imageUri }}
+          className="w-24 h-48 rounded-md mt-2"
+        />
       ) : null}
 
-      <Button title="Create Post" onPress={handleSubmit} />
+      <InputAccessoryView nativeID={inputAccessoryViewID}>
+        <View className="flex-row justify-between items-end p-3 ">
+          <View>
+            <SymbolView
+              name="globe.americas.fill"
+              type="hierarchical"
+              size={30}
+            />
+          </View>
+          <Pressable
+            className="bg-black px-5 py-2 rounded-full"
+            onPress={handleSubmit}
+          >
+            <Text className="text-white font-bold">Post</Text>
+          </Pressable>
+        </View>
+      </InputAccessoryView>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  input: {
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 8,
-  },
-  imagePreview: {
-    width: 100,
-    height: 100,
-    marginVertical: 10,
-    resizeMode: 'cover',
-  },
-});
-
 export default PostModal;
