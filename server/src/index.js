@@ -1,10 +1,8 @@
-import './config/db';
-import express from 'express';
-import cors from 'cors';
-import helmet from 'helmet';
-import morgan from 'morgan';
-import routes from './routes';
-
+require('./config/db');
+const express = require('express');
+const cors = require('cors');
+const helmet = require('helmet');
+const morgan = require('morgan');
 const app = express()
 const routes = require('./routes');
 const PORT = process.env.PORT || 3000;

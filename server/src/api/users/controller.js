@@ -1,17 +1,19 @@
-import User from "./model";
-import jwt from "jsonwebtoken";
+const User = require("./model");
 
 const createUser = async (req, res) => {
-  const { username, email, password, accessToken } = req.body;
+  const { username } = req.body;
 
   try {
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+
     const user = await User.create({
       username,
-      email,
-      password,
     });
-    const token = jwt.sign(user.username, process.env.TOKEN_SECRET, { expiresIn: "7d" }, accessToken);
-    res.status(201).json({ token });
+
+    res.status(201).json({ username: user.username });
   } catch (error) {
     res.status(500).json({ message: "Error creating user", error });
   }

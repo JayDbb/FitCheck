@@ -1,6 +1,5 @@
-import express from 'express';
-import controller from './controller';
-
+const express = require('express');
+const controller = require('./controller');
 const router = express.Router();
 
 router.post('/create-post',  controller.createPost); 
