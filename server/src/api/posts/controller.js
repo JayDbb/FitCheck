@@ -22,7 +22,6 @@ const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 const createPost = async (req, res) => {
     try {
         const {
-            userID,
             imageBase64,
             type,
             caption,
@@ -32,6 +31,12 @@ const createPost = async (req, res) => {
             category,
             AIrating
         } = req.body;
+
+        const user = await User.findOne({ username: req.username });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
 
         const relatedText = await scanImage({ body: { imageUrl: imageBase64, category, isLocal: true } }, res);
         const buffer = Buffer.from(imageBase64.replace(/^data:image\/\w+;base64,/, ""), "base64");
@@ -52,7 +57,7 @@ const createPost = async (req, res) => {
 
         console.log(userID,"<--")
         const post = await Post.create({
-            writterID: userID,
+            writterID: user._id,
             createdDate: new Date().toISOString(),
             imageURL: imageUrl,
             type,
@@ -76,18 +81,28 @@ const createPost = async (req, res) => {
  */
 const searchPosts = async (req, res) => {
     const { q } = req.query;
-    console.log(q);
+    console.log("Search query:", q);
     
-    const posts = await Post.find({
-        $or: [
-            { searchTags: { $regex: q, $options: "i" } }, // Partial match in searchTags array
-            { caption: { $regex: q, $options: "i" } }, // Case-insensitive match in caption
-            { category: { $regex: q, $options: "i" } } // Case-insensitive match in category
-        ]
-    });
+    if (!q) {
+        return res.status(400).json({ message: "Search query is required" });
+    }
 
-    console.log(posts);
-    res.status(200).json(posts);
+    try {
+
+        const posts = await Post.find({
+            $or: [
+                { "searchTags": { $regex: q, $options: "i" } },
+                { "caption": { $regex: q, $options: "i" } },
+                { "category": { $regex: q, $options: "i" } }
+            ]
+        });
+
+        console.log("Found posts:", posts.length);
+        res.status(200).json(posts);
+    } catch (error) {
+        console.error("Search error:", error);
+        res.status(500).json({ message: "Error searching posts", error: error.message });
+    }
 };
 
 
@@ -254,11 +269,13 @@ const getUserPosts = async (req, res) => {
     const username = req.query.username;
     const user = await User.findOne({ username });
 
+    console.log(user, username);
+
     if (!user) {
         return res.status(404).json({ message: 'User not found' });
     }
-    
-    const posts = await Post.find({ writterID: user.username });
+
+    const posts = await Post.find({ writterID: user._id });
     res.status(200).json(posts);
 };
 
