@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Image, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, Button, Image, StyleSheet, Alert, TouchableOpacity, FlatList } from 'react-native';
 import axios from 'axios';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
@@ -7,9 +7,10 @@ import * as FileSystem from 'expo-file-system';
 const PostModal = () => {
   const [type, setType] = useState('');
   const [category, setCategory] = useState('');
+  const [tags, setTags] = useState<string[]>([]);
+  const [tagInput, setTagInput] = useState('');
   const [imageBase64, setImageBase64] = useState('');
   const [imageUri, setImageUri] = useState('');
-
 
   const handleImagePick = async () => {
     try {
@@ -40,7 +41,6 @@ const PostModal = () => {
     }
   };
 
-
   const handleSubmit = async () => {
     if (!type || !category || !imageBase64) {
       Alert.alert('Error', 'Please provide type, category, and an image.');
@@ -51,6 +51,7 @@ const PostModal = () => {
       const response = await axios.post('http://localhost:8081/create-post', {
         type,
         category,
+        tags,
         imageBase64,
       });
 
@@ -62,24 +63,72 @@ const PostModal = () => {
     }
   };
 
+  const addTag = () => {
+    if (tagInput.trim() == '') return;
+
+    setTags([...tags, tagInput.toLocaleLowerCase().trim()]);
+    setTagInput('');
+    
+  };
+
+  const removeTag = (index: number) => {
+    setTags(tags.filter((_, i) => i !== index));
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Create a New Post</Text>
       
-      <TextInput
-        style={styles.input}
-        placeholder="Post Type"
-        value={type}
-        onChangeText={setType}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Category"
-        value={category}
-        onChangeText={setCategory}
-      />
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Post Type"
+          value={type}
+          onChangeText={setType}
+        />
+        {type ? (
+          <TouchableOpacity onPress={() => setType('')}>
+            <Text>X</Text>
+          </TouchableOpacity>
+        ) : null}
+      </View>
 
-      {/* Image Selection Button */}
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Category"
+          value={category}
+          onChangeText={setCategory}
+        />
+        {category ? (
+          <TouchableOpacity onPress={() => setCategory('')}>
+            <Text>x</Text>
+          </TouchableOpacity>
+        ) : null}
+      </View>
+
+      <View style={styles.inputContainer}>
+        <View style={styles.tagsInput}>
+          {tags.map((tag, index) => (
+            <View key={index} style={styles.tag}>
+              <Text style={styles.tagText}>{tag}</Text>
+              <TouchableOpacity onPress={() => removeTag(index)}>
+                <Text style={styles.removeButton}>x</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
+
+          <TextInput
+            style={styles.tagInput}
+            placeholder="Add a tag"
+            value={tagInput}
+            onChangeText={setTagInput}
+            onSubmitEditing={addTag}
+          />
+        </View>
+      </View>
+
+    
       <Button title="Pick an Image" onPress={handleImagePick} />
       {imageUri ? (
         <Image source={{ uri: imageUri }} style={styles.imagePreview} />
@@ -100,12 +149,46 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
   },
-  input: {
-    height: 40,
-    borderColor: '#ccc',
+  inputContainer: { 
+    flexDirection: 'row',
+    alignItems: 'center',
+
     borderWidth: 1,
     marginBottom: 10,
     paddingHorizontal: 8,
+  },
+  input: {
+    flex: 1,
+    height: 40,
+    color: 'black',
+  },
+  
+  tagsInput: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    flex: 1,
+  
+  },
+  tagInput: {
+    flex: 1,
+    height: 40,
+    color: 'black',
+    borderWidth: 0
+  },
+  tag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#e0e0e0',
+    padding: 4,
+    margin: 4,
+    
+  },
+  tagText: {
+    marginRight: 8,
+  },
+  removeButton: {
+    color: 'red',
   },
   imagePreview: {
     width: 100,
