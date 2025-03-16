@@ -50,7 +50,7 @@ const MasonryGrid = ({
     );
 
     router.push(
-      `/home/details/${item.id}?title=${encodeURIComponent(
+      `/(tabs)/home//details/${item.id}?title=${encodeURIComponent(
         item.title
       )}&image=${encodeURIComponent(item.image)}`
     );
