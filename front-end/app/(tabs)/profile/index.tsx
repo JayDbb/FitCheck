@@ -47,7 +47,7 @@ const ProfileScreen = () => {
           }
         );
 
-        console.log(response.data);
+        // console.log(response.data);
         return response.data.username;
 
       
@@ -63,7 +63,7 @@ const ProfileScreen = () => {
       if (!userToken) return;
 
       const username = await getUsername();
-      console.log(username)
+      // console.log(username)
 
       if (!username) return;
 
@@ -80,9 +80,9 @@ const ProfileScreen = () => {
         .then((response) => {
           const fetchedPosts = response.data.map((post: any) => ({
             id: post._id,
-            image: post.imageURL,
+            imageURL: post.imageURL,
           }));
-          console.log(fetchedPosts);
+          // console.log(fetchedPosts);
           setPosts(fetchedPosts);
         })
         .catch((error) => {
@@ -94,7 +94,7 @@ const ProfileScreen = () => {
 
 
 
-console.log(posts)
+// console.log(posts)
   return (
     <SafeAreaView className="px-4 pt-2">
       <ScrollView>
@@ -152,7 +152,7 @@ console.log(posts)
           </Pressable>
         </View>
 
-        <View>
+        <View className = "pt-4">
           <MasonryList posts={posts} />
         </View>
 
