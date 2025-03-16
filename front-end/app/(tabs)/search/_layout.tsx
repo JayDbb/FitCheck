@@ -13,11 +13,14 @@ const SearchLayout = () => {
       <Stack.Screen
         name="index"
         options={{
-       
           headerShadowVisible: false,
+          title: "Search",
+          headerLargeTitle: true,
+  
           headerLargeTitleShadowVisible: false,
+
           headerSearchBarOptions: {
-            placeholder: "fits, inspirations",
+            placeholder: "Fits, inspirations and more",
             onChangeText: (event) => {
               router.setParams({ query: event.nativeEvent.text });
             },

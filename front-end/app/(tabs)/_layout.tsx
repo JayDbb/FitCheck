@@ -14,11 +14,10 @@ export default function TabLayout() {
       screenOptions={{
         tabBarButton: hapticTab,
         headerShown: false,
-        tabBarBackground: BlurTabBarBackground,
+        // tabBarBackground: BlurTabBarBackground,
         tabBarStyle: {
-          // Use a transparent background on iOS to show the blur effect
-          position: "absolute",
-          backgroundColor: "transparent",
+          backgroundColor: 'white',
+          position: 'absolute',
         },
       }}
     >
