@@ -1,68 +1,116 @@
-import { router } from "expo-router";
-import { Pressable, Text, TouchableOpacity, View } from "react-native";
-import app from "@/firebase/init";
-import * as Google from 'expo-auth-session/providers/google';
-import { useEffect, useState } from "react";
-import { 
-  getAuth, 
-  GoogleAuthProvider,
-  initializeAuth, 
-  // @ts-ignore
-  // getReactNativePersistence,
-  signInWithCredential, 
-  User 
-} from 'firebase/auth';
+import { View, Text, TextInput, TouchableOpacity, Alert, Pressable } from "react-native";
+import React, { useRef, useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
 
+const Signup = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-export default function Index() {
-  const [user, setUser] = useState<User | null>(null);
+  const onSubmit = async () => {
 
-  // Initialize Google Sign-In request
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    // androidClientId: "616664580407-g18m9psaahv38me89an1pdcrq0n0fm8p.apps.googleusercontent.com",
-    iosClientId: "616664580407-easin3n0t8atk8hp3f9ktrulfg2n2qo5.apps.googleusercontent.com",
-    webClientId: "616664580407-g18m9psaahv38me89an1pdcrq0n0fm8p.apps.googleusercontent.com",
-  });
-  
-
-  // useEffect(() => {
-  //   if (response?.type === "success" && response.authentication) {
-  //     const credential = GoogleAuthProvider.credential(null, response.authentication.accessToken);
-      
-  //     signInWithCredential(auth, credential).then(userCredential => {
-  //       setUser(userCredential.user);
-  //       router.push("/(tabs)/home");
-  //     }).catch(error => {
-  //       console.error("Sign-in Error", error);
-  //     });
-  //   }
-  // }, [response]);
-
-  const handleLoginGoogle = async () => {
-    await promptAsync();
-  }
-
+  };
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', gap: 20 }}>
-      <TouchableOpacity 
-        onPress={handleLoginGoogle}
-        style={{ 
-          backgroundColor: '#4285F4', 
-          padding: 15, 
-          borderRadius: 8,
-          minWidth: 200,
-          alignItems: 'center' 
-        }}
-      >
-        <Text style={{ color: 'white', fontWeight: 'bold' }}>Login with Google</Text>
-      </TouchableOpacity>
-      
-      <Pressable 
-        onPress={() => router.push("/(tabs)/home")}
-        style={{ padding: 10 }}
-      >
-        <Text>Skip to main</Text>
-      </Pressable>
-    </View>
+    <SafeAreaView className="h-full w-full bg-white">
+      {/* Top Section */}
+
+      {/* Centered Content */}
+      <View className="flex-1 justify-center px-4">
+        <View className="pb-12">
+          <Text className="text-lg font-semibold text-primary-200">Welcome !</Text>
+          <View className="mt-8">
+            <Text className="text-4xl font-bold text-primary-200">
+              Sign up to create your Account
+            </Text>
+            <Text className="text-secondary-400 mt-4 font-medium font-base">
+              Enter your email and password to log in to your account
+            </Text>
+          </View>
+        </View>
+
+        {/* Google Login Button */}
+        <View>
+          <TouchableOpacity className="bg-primary-200 rounded-xl  h-[50px] w-full items-center justify-center  px-2">
+            <Text className="text-white text-lg font-bold">
+              Sign up with Google
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Divider */}
+        <View className="flex-row items-center my-6">
+          <View className="flex-1 border-[0.5px] border-secondary-300"></View>
+          <Text className="mx-4 text-black font-medium">or</Text>
+          <View className="flex-1 border-[0.5px] border-secondary-300"></View>
+        </View>
+
+        {/* Input Fields */}
+        <View>
+          <View className="mb-8">
+            <Text className = "text-secondary-400 font-medium  ">Email</Text>
+            <TextInput
+               className=" rounded-xl px-4 py-3 mt-2 h-[44px] bg-secondary-100"
+              placeholder="Email"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoComplete="email"
+              value={email}
+              onChangeText={setEmail}
+            />
+          </View>
+
+          <View className="mb-8">
+            <Text className = "text-secondary-400 font-medium ">Username</Text>
+            <TextInput
+               className=" rounded-xl px-4 py-3 mt-2 h-[44px] bg-secondary-100"
+              placeholder="Username"
+              autoCapitalize="none"
+              autoComplete="username"
+              value={username}
+              onChangeText={setUsername}
+            />
+          </View>
+
+          <View>
+            <Text className = "text-secondary-400 font-medium ">Password</Text>
+            <TextInput
+                className=" rounded-xl px-4 py-3 mt-2 h-[44px] bg-secondary-100"
+              placeholder="Password"
+              secureTextEntry
+              autoCapitalize="none"
+              autoComplete="password"
+              value={password}
+              onChangeText={setPassword}
+            />
+          </View>
+        </View>
+
+        {/* Submit Button */}
+        <View className="mt-8">
+          <TouchableOpacity onPress={onSubmit} className="bg-primary-200 rounded-xl h-[50px] w-full items-center justify-center  px-2">
+            <Text className="text-white text-lg font-bold">Sign up</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View className = "text-center flex-row justify-center items-center mt-8 gap-1  ">
+          <Text className="text-secondary-400 font-medium text-center ">
+            Already have an account?
+            </Text>
+
+            <Pressable
+              onPress={() => router.push("./login")}
+              className="text-center"
+            >
+              <Text className="text-center">Login</Text>
+            </Pressable>
+         
+          </View>
+      </View>
+    </SafeAreaView>
   );
-}
+};
+
+export default Signup;

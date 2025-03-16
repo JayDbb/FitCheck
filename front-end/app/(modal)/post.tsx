@@ -145,12 +145,6 @@ const PostModal = () => {
         </View>
       </View>
 
-      {imageUri ? (
-        <Image
-          source={{ uri: imageUri }}
-          className="w-24 h-48 rounded-md mt-2"
-        />
-      ) : null}
 
       <InputAccessoryView nativeID={inputAccessoryViewID}>
         <View className="flex-row justify-between items-end p-3 ">
