@@ -37,7 +37,7 @@ const MasonryGrid = ({
     console.log(item);
     // Serialize the details to pass as query parameters (you can pass specific fields)
     router.push(
-      `/(tabs)/home/details/${item._id}`
+      `/(tabs)/home/details/${item._id}?url=${item.imageURL}`
     );
   };
 

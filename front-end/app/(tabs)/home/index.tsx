@@ -72,6 +72,8 @@ const HomeScreen = () => {
     fetchPosts();
   }, []);
 
+  console.log(posts)
+
   return (
     <SafeAreaView className="flex-1">
       <MasonryList

@@ -63,19 +63,24 @@ const PostModal = () => {
         const formattedBase64 = `data:image/jpeg;base64,${base64}`;
         setImageBase64(formattedBase64);
 
-        const response = await axios.post(`${apiUrl}/posts/get-ai-rating`, {
+        const response =  axios.post(`${apiUrl}/posts/get-ai-rating`, {
           base64: formattedBase64,
         }, {
           headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${await token()}`
           }}
-        );
+        )
 
-        console.log(response.data);
+        
       }
     } catch (error) {
-      console.error("Error picking image:", error);
+      if (axios.isAxiosError(error)) {
+        console.error("Server Response:", error.response?.data);
+        Alert.alert("Error", error.response?.data?.message || "There was an error creating your post.");
+      } else {
+        console.error("Unexpected Error:", error);
+      }
     }
   };
 
@@ -89,6 +94,7 @@ const PostModal = () => {
 
       console.log(imageBase64);
       const response = await axios.post(`${apiUrl}/posts/create-post`, {
+        "imageBase64": imageBase64,
         "type": "public",
         "caption": caption,
         "taggedShirt": "Black Oversized Hoodie",
@@ -96,6 +102,7 @@ const PostModal = () => {
         "taggedShoes": "White Sneakers",
         "category": "casual",
         "AIrating": 4.0,
+
       },
       {
         headers: {
@@ -107,11 +114,9 @@ const PostModal = () => {
 
       Alert.alert("Success", "Post created successfully!");
       console.log(response.data);
-      Alert.alert("Success", "Post created successfully!");
-      console.log(response.data);
     } catch (error) {
       console.error(error);
-      // Alert.alert("Error", "There was an error creating your post.");
+ 
       Alert.alert("Error", "There was an error creating your post.");
     }
   };
