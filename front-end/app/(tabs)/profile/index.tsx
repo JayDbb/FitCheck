@@ -40,6 +40,7 @@ const ProfileScreen = () => {
   const getUsername = async () => {
     try {
       const token = await getToken();
+      console.log(token)
       if (!token) return null;
       const response = await axios.get(
         "https://fitcheck-server-c4dshjg7dthhcrea.eastus2-01.azurewebsites.net/users/get",
@@ -47,7 +48,9 @@ const ProfileScreen = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+
       return response.data.username;
+      
     } catch (error) {
       console.error("Failed to fetch username", error);
       return null;
@@ -60,6 +63,7 @@ const ProfileScreen = () => {
       if (!userToken) return;
 
       const username = await getUsername();
+      console.log(username)
 
       if (!username) return;
 
@@ -90,7 +94,7 @@ const ProfileScreen = () => {
 
 
 
-
+console.log(posts)
   return (
     <SafeAreaView className="px-4 pt-2">
       <ScrollView>
