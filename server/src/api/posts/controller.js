@@ -3,7 +3,7 @@ const Post = require('./model');
 const s3 = require("../../config/s3")
 const User = require("../users/model");
 const OpenAI = require('openai');
-const { shortenBase64Image } = require('../../util/shortenbase64');
+// const { shortenBase64Image } = require('../../util/shortenbase64');
 
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 
@@ -34,14 +34,11 @@ const createPost = async (req, res) => {
         } = req.body;
 
         const relatedText = await scanImage({ body: { imageUrl: imageBase64, category, isLocal: true } }, res);
-
-        // Convert Base64 image to buffer
         const buffer = Buffer.from(imageBase64.replace(/^data:image\/\w+;base64,/, ""), "base64");
 
-        // Generate a unique filename
         const fileName = `uploads/${uuidv4()}.jpg`;
 
-        // S3 upload parameters
+    
         const uploadParams = {
             Bucket: process.env.AWS_S3_BUCKET_NAME,
             Key: fileName,
@@ -49,11 +46,11 @@ const createPost = async (req, res) => {
             ContentType: 'image/jpeg',
         };
 
-        // Upload to S3
+    
         const uploadResult = await s3.upload(uploadParams).promise();
         const imageUrl = uploadResult.Location;
 
-        // Create post
+        console.log(userID,"<--")
         const post = await Post.create({
             writterID: userID,
             createdDate: new Date().toISOString(),
@@ -260,7 +257,7 @@ const getUserPosts = async (req, res) => {
     if (!user) {
         return res.status(404).json({ message: 'User not found' });
     }
-
+    
     const posts = await Post.find({ writterID: user.username });
     res.status(200).json(posts);
 };

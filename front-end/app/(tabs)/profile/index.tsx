@@ -36,7 +36,7 @@ const pins = [
 
 const ProfileScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
-
+  const [posts, setPosts] = useState([]);
   const onRefresh = () => {
     setRefreshing(true);
 
@@ -47,13 +47,21 @@ const ProfileScreen = () => {
 
   useEffect(() => {
     const fetchPosts = async (username: string) => {
-      axios.get(`http://localhost:8081/posts/get-posts?username=${username}`).then((response) => {
-        console.log(response.data);
-      }).catch((error) => {
-        console.error(error);
-      });
+      axios
+        .get(`http://localhost:3000/posts/get-posts?username=${username}`)
+        .then((response) => {
+          console.log(response.data, "results", username);
+          const fetchedPosts = response.data.map((post: any) => ({
+            id: post._id,
+            image: post.imageURL,
+          }));
+          setPosts(fetchedPosts);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     };
-    fetchPosts("JamarTG");
+    fetchPosts("JamariTheGreat");
   }, []);
 
   return (
