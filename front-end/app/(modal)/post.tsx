@@ -20,6 +20,7 @@ import { SymbolView } from "expo-symbols";
 const PostModal = () => {
   const [type, setType] = useState("");
   const [category, setCategory] = useState("");
+
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState('');
   const [imageBase64, setImageBase64] = useState("");
@@ -106,19 +107,31 @@ const PostModal = () => {
 
   return (
     <View className="p-4">
-      <View className="flex-row items-center mb-4  border-gray-300 pb-4">
+      <View className="flex-row items-start mb-4  border-gray-300 pb-4">
         <Image
           source={{ uri: "https://picsum.photos/seed/696/3000/2000" }}
           className="h-10 w-10 rounded-full"
         />
         <View className="flex-1 ml-3">
-          <Text className="font-bold text-base">Username</Text>
+          <Text className="font-bold text-base">cajaun</Text>
           <TextInput
             className="text-base max-h-24"
             placeholder="What's new?"
             multiline
             inputAccessoryViewID={inputAccessoryViewID}
           />
+
+{imageUri ? (
+        <Image
+          source={{ uri: imageUri }}
+          className=" rounded-md mt-2"
+          style={{
+            width: "100%",
+            height: 200,
+            borderRadius: 6,
+          }}
+        />
+      ) : null}
 
           <View className="flex-row gap-4">
             <Pressable onPress={handleImagePick} className="mt-3 p-2">
@@ -136,15 +149,10 @@ const PostModal = () => {
         </View>
       </View>
 
-      {imageUri ? (
-        <Image
-          source={{ uri: imageUri }}
-          className="w-24 h-48 rounded-md mt-2"
-        />
-      ) : null}
+ 
 
       <InputAccessoryView nativeID={inputAccessoryViewID}>
-        <View className="flex-row justify-between items-end p-3 ">
+        <View className="flex-row justify-between items-end p-4 ">
           <View>
             <SymbolView
               name="globe.americas.fill"

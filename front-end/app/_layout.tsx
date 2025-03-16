@@ -1,5 +1,6 @@
-import { Stack } from "expo-router";
+import { router, Stack } from "expo-router";
 import "./global.css";
+import { Pressable, Text } from "react-native";
 
 
 export default function RootLayout() {
@@ -17,6 +18,15 @@ export default function RootLayout() {
             title: "New Post",
             headerShown: true,
           
+            headerLeft:  () => (
+              <Pressable onPress={() => router.dismiss()}>
+                <Text>
+                  Back
+                </Text>
+              </Pressable>
+            ),
+
+       
           }}
         />
     </Stack>

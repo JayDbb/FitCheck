@@ -7,21 +7,15 @@ const SearchLayout = () => {
     <Stack
       screenOptions={{
         headerShadowVisible: false,
+        
       }}
     >
       <Stack.Screen
         name="index"
         options={{
-  
+       
           headerShadowVisible: false,
-          title: "Search",
-          headerTransparent: true,
-          headerBlurEffect: "systemChromeMaterial",
           headerLargeTitleShadowVisible: false,
-
-          headerLargeStyle: {
-            backgroundColor: "transparent",
-          },
           headerSearchBarOptions: {
             placeholder: "fits, inspirations",
             onChangeText: (event) => {
