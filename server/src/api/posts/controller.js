@@ -83,7 +83,7 @@ const searchPosts = async (req, res) => {
     
     const posts = await Post.find({
         $or: [
-            { searchTags: { $elemMatch: { $regex: q, $options: "i" } } }, // Partial match in searchTags array
+            { searchTags: { $regex: q, $options: "i" } }, // Partial match in searchTags array
             { caption: { $regex: q, $options: "i" } }, // Case-insensitive match in caption
             { category: { $regex: q, $options: "i" } } // Case-insensitive match in category
         ]
@@ -91,6 +91,38 @@ const searchPosts = async (req, res) => {
 
     console.log(posts);
     res.status(200).json(posts);
+};
+
+
+/**
+ * Searches for posts based on query.
+ * @query {string} q - The search term to filter posts by tags, caption, or category.
+ */
+const loadFeed = async (req, res) => {
+    const { username } = req.query;
+    const user = await User.findOne({ username });
+
+    if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Get the list of users they follow
+    const followedUsers = user.following || []; // Assuming 'following' is an array of usernames
+
+    // Fetch posts from followed users
+    const followedPosts = await Post.find({ writterID: { $in: followedUsers } });
+
+    // Fetch random posts (excluding the ones from followed users)
+    const randomPosts = await Post.aggregate([
+        { $match: { writterID: { $nin: followedUsers } } },
+        { $sample: { size: 5 } }
+    ]);
+
+    // Combine and shuffle
+    const feedPosts = [...followedPosts, ...randomPosts].sort(() => Math.random() - 0.5);
+
+    res.status(200).json(feedPosts);
+
 };
 
 /**
@@ -116,12 +148,15 @@ const scanImage = async (req, res) => {
             "messages": [
                 {
                     "role": "system",
-                    "content": "Extract relevant searchable keywords..."
+                    "content": "You are a fashion analysis expert. Your task is to extract relevant searchable keywords from an outfit image based on the provided category. \n\nAnalyze the outfit and generate a comma-separated list of keywords related to:\n\n- Clothing items (e.g., jeans, blazer, sneakers)\n- Colors (e.g., black, white, navy)\n- Patterns or textures (e.g., striped, floral, leather)\n- Style categories (e.g., casual, streetwear, formal, minimalistic)\n- Accessories (e.g., sunglasses, belt, handbag)\n\n**Output Format:**\nReturn only a comma-separated list of keywords with no extra text, commentary, or explanation.\n\n**Example Output:**\n```\nblack pants, white sneakers, oversized hoodie, streetwear, casual, modern\n```"
                 },
                 {
                     "role": "user",
                     "content": [
-                        { "type": "text", "text": `Category: ${category}\nExtract relevant keywords...` },
+                        { 
+                            "type": "text", 
+                            "text": `Category: ${category}\nExtract relevant keywords from the outfit and return them in a comma-separated format only.` 
+                        },
                         { "type": "image_url", "image_url": imageUrl }
                     ]
                 }
