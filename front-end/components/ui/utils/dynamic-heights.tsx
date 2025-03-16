@@ -31,7 +31,7 @@ const DynamicHeights = ({ imageUri, id }: DynamicHeightsProps) => {
 
 
     <Animated.Image
-    sharedTransitionTag={id}
+    sharedTransitionTag="tag"
       source={{ uri: imageUri }}
       style={[styles.image, { aspectRatio: ratio }]}
     />

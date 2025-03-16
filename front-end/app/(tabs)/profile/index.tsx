@@ -65,8 +65,9 @@ const ProfileScreen = () => {
   }, []);
 
   return (
-    <ScrollView>
-      <SafeAreaView className="px-2 pt-2 ">
+
+      <SafeAreaView className="flex-1 px-2 ">
+            <ScrollView>
         {/* Header */}
         <View className="h-[44px] px-2 flex-row justify-end items-center">
 
@@ -128,9 +129,9 @@ const ProfileScreen = () => {
             onRefresh={onRefresh}
           />
           </View>
-
+          </ScrollView>
       </SafeAreaView>
-    </ScrollView>
+
   );
 };
 
