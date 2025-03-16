@@ -18,7 +18,7 @@ interface RatingSliderProps {
 }
 
 
-const starSize = 20;
+const starSize = 30;
 
 
 const StarIcon = ({ color }: { color: string }) => (
@@ -87,9 +87,9 @@ const RatingSlider: React.FC<RatingSliderProps> = ({ rating, onRatingChange }) =
           );
         })}
       </View>
-      {currentValue > 0 && (
+      {/* {currentValue > 0 && (
         <Text style={styles.text}>{getRangeText(currentValue)}</Text>
-      )}
+      )} */}
     </View>
   );
 };
@@ -98,6 +98,8 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     width: "100%",
+    scaleX: 2,
+    scaleY: 2,
   },
   starsContainer: {
     flexDirection: "row",

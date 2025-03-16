@@ -39,6 +39,8 @@
     "morgan": "^1.10.0",
     "nodemon": "^3.1.9",
     "openai": "^4.87.3",
+    "react-native-fs": "^2.20.0",
+    "react-native-image-editor": "^0.0.1",
     "socket.io": "^4.8.1",
     "uuid": "^11.1.0"
   },

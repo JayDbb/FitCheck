@@ -7,6 +7,8 @@ const OpenAI = require('openai');
 const server = require('../../index').server;
 const io = require('socket.io')(server);
 
+const compressBase64Image = require('../../util/shortenbase64');
+
 
 // const { shortenBase64Image } = require('../../util/shortenbase64');
 
@@ -44,8 +46,11 @@ const createPost = async (req, res) => {
         }
 
         const relatedText = await scanImage({ body: { imageUrl: imageBase64, category, isLocal: true } }, res);
+        
+       console.log( compressBase64Image(imageBase64))
         const buffer = Buffer.from(imageBase64.replace(/^data:image\/\w+;base64,/, ""), "base64");
 
+        
         const fileName = `uploads/${uuidv4()}.jpg`;
 
     
@@ -330,15 +335,21 @@ const addRating = async (req, res) => {
     try {
         const { postID, rating, ratingUser } = req.body;
         const post = await Post.findById(postID);
+        const user = await User.findOne({ username: ratingUser });
 
         if (!post) {
             return res.status(404).json({ message: 'Post not found' });
         }
 
-        if (post.ratings.some(r => r.userID === ratingUser)) {
-            post.ratings = post.ratings.map(r => (r.userID === ratingUser ? { ...r, rating } : r));
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+
+        if (post.ratings.some(r => r.userID === user._id)) {
+            post.ratings = post.ratings.map(r => (r.userID === user._id ? { ...r, rating } : r));
         } else {
-            post.ratings.push({ userID: ratingUser, rating });
+            post.ratings.push({ userID: user._id, rating });
         }
 
         post.overallRating = post.ratings.reduce((acc, r) => acc + r.rating, 0) / post.ratings.length;
