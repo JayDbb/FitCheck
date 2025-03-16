@@ -328,5 +328,6 @@ module.exports = {
     getUserPosts,
     getAIrating,
     scanImage,
-    searchPosts
+    searchPosts,
+    loadFeed
 };

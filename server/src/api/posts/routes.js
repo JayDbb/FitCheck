@@ -10,6 +10,7 @@ router.post('/scan-image', controller.scanImage);
 
 router.get('/get-posts', controller.getUserPosts);
 router.get('/search', controller.searchPosts);
+router.get('/load-feed', controller.loadFeed);
 
 router.delete('/delete-post', controller.deletePost);
 
