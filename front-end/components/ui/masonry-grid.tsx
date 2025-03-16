@@ -59,6 +59,7 @@ const MasonryGrid = ({
   return (
     <ScrollView
       contentContainerStyle={{ width: "100%" }}
+      contentInsetAdjustmentBehavior="automatic"
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
