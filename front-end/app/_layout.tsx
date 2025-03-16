@@ -2,10 +2,14 @@ import { router, Stack } from "expo-router";
 import "./global.css";
 import { Pressable, Text } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import ThemeProvider from "@/hooks/theme-provider";
 
 export default function RootLayout() {
   return (
     <GestureHandlerRootView>
+      <ThemeProvider>
+
+     
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
 
@@ -26,6 +30,7 @@ export default function RootLayout() {
           }}
         />
       </Stack>
+      </ThemeProvider>
     </GestureHandlerRootView>
   );
 }

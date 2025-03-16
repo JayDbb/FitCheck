@@ -1,4 +1,4 @@
-import { Image, ImageSourcePropType, StyleSheet, View } from "react-native";
+import { Image, ImageSourcePropType, StyleSheet, useColorScheme, View } from "react-native";
 import React, { useState } from "react";
 import Animated, {
   FadeIn,
@@ -21,6 +21,7 @@ const HeadText = (props: HeadTextProps) => {
   const [totalWidth, setTotalWidth] = useState(0);
   const [textWidth, setTextWidth] = useState(0);
   const width = totalWidth - textWidth - gap;
+  const theme = useColorScheme();
 
   const Transition = LinearTransition.delay(1650)
     .springify()
@@ -58,7 +59,7 @@ const HeadText = (props: HeadTextProps) => {
           onLayout={(event) => {
             setTextWidth(event.nativeEvent.layout.width);
           }}
-          style={styles.headText}
+          style={{fontSize: 70, fontWeight: 700, color: theme ==  "light" ? "#000" : "#fff"}}
         >
           {text}
         </Animated.Text>
@@ -81,6 +82,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F7F7F7",
+    alignItems: "center",
     justifyContent: "center",
   },
   headerContainer: {
@@ -99,7 +101,6 @@ const styles = StyleSheet.create({
   headText: {
     fontSize: 70,
     fontWeight: "700",
-    color: "#0C1824",
   },
   image: {
     width: "100%",
