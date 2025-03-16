@@ -61,6 +61,7 @@ const PostModal = () => {
         const base64 = await FileSystem.readAsStringAsync(uri, {
           encoding: FileSystem.EncodingType.Base64,
         });
+        
         setImageBase64(base64);
 
         const response = await axios.post(`${apiUrl}/posts/get-ai-rating`, {
@@ -81,16 +82,16 @@ const PostModal = () => {
   };
 
   const handleSubmit = async () => {
-    if (!type || !category || !imageBase64) {
-      Alert.alert("Error", "Please provide type, category, and an image.");
-      return;
-    }
+    // if ( !category || !imageBase64) {
+    //   Alert.alert("Error", "Please provide type, category, and an image.");
+    //   return;
+    // }
 
     try {
       const response = await axios.post(`${apiUrl}/posts/create-post`, {
-        type,
-        category,
-        tags,
+        type: "public",
+        category: "casual",
+        // tags,
         imageBase64,
         caption : "",
         "taggedShirt":"",
