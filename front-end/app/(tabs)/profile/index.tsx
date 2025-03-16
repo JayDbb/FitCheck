@@ -17,7 +17,7 @@ const ProfileScreen = () => {
   useEffect(() => {
     const fetchPosts = async (username: string) => {
       axios
-        .get(`http://localhost:3000/posts/get-posts?username=${username}`)
+        .get(`https://fitcheck-server-c4dshjg7dthhcrea.eastus2-01.azurewebsites.net/posts/get-posts?username=${username}`)
         .then((response) => {
           console.log(response.data, "results", username);
           const fetchedPosts = response.data.map((post: any) => ({

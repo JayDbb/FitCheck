@@ -6,6 +6,7 @@ import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SymbolView } from "expo-symbols";
+import { apiUrl } from "../../config";
 
 const PostModal = () => {
   const [type, setType] = useState("");
@@ -15,11 +16,17 @@ const PostModal = () => {
   const [tagInput, setTagInput] = useState("");
   const [imageBase64, setImageBase64] = useState("");
   const [imageUri, setImageUri] = useState("");
+  const [aiRating, setAiringRating] = useState(0);
   const inputAccessoryViewID = "uniqueID";
 
   const userID = async () => {
     const user = await AsyncStorage.getItem("user");
     return JSON.parse(user as string)?.id;
+  };
+
+  const token = async () => {
+    const user = await AsyncStorage.getItem("token");
+    return JSON.parse(user as string)?.token;
   };
 
   const handleImagePick = async () => {
@@ -44,7 +51,19 @@ const PostModal = () => {
           encoding: FileSystem.EncodingType.Base64,
         });
         setImageBase64(base64);
+
+        const response = await axios.post(`${apiUrl}/posts/get-ai-rating`, {
+          base64,
+        }, {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${await token()}`
+          }
+        });
+
+        console.log(response.data);
       }
+
     } catch (error) {
       console.error("Error picking image:", error);
     }
@@ -57,7 +76,7 @@ const PostModal = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:8081/create-post", {
+      const response = await axios.post(`${apiUrl}/posts/create-post`, {
         type,
         category,
         tags,
@@ -67,6 +86,14 @@ const PostModal = () => {
         "taggedPants": "",
         "taggedShoes": "",
         "AIrating": 4.0,
+        
+        
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${await token()}`
+        }
       });
 
       Alert.alert("Success", "Post created successfully!");

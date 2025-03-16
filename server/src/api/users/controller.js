@@ -21,7 +21,6 @@ const createUser = async (req, res) => {
   res.status(201).json({ token });
 };
 
-
 /**
  * Retrieves a user by email.
  * @query {string} email - The email of the user to retrieve.
