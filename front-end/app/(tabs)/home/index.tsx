@@ -3,6 +3,7 @@ import { SafeAreaView, Text } from "react-native";
 import MasonryList from "@/components/ui/masonry-grid";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { apiUrl } from "@/config";
 
 const HomeScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
@@ -18,7 +19,7 @@ const HomeScreen = () => {
 
   const token = async () => {
     const user = await AsyncStorage.getItem("token");
-    return user;
+    return JSON.parse(user as string)?.token;
   };
 
   const getToken = async () => {
@@ -49,21 +50,25 @@ const HomeScreen = () => {
 
         if (!username) return;
 
-        const response = await axios.get(
-          `https://fitcheck-server-c4dshjg7dthhcrea.eastus2-01.azurewebsites.net/posts/load-feed?username=${username}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${userToken}`,
-            },
-          }
-        );
-
-        const transformedData = response.data.map(({ _id, imageURL }: any) => ({
-          id: _id as string,
-          image: (imageURL || "") as string,
-        }));
-        setPosts(transformedData);
+        token().then(token => {
+          axios.get(
+            `${apiUrl}/posts/load-feed?username=${username}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          ).then((response) => {
+            const transformedData = response.data.map(({ _id, imageURL }: any) => ({
+              id: _id as string,
+              image: (imageURL || "") as string,
+            }));
+            setPosts(transformedData);
+          }).catch((error) => {
+            console.error("Error fetching posts:", error);
+          });
+        })
       } catch (error) {
         console.error("Error fetching posts:", error);
       }

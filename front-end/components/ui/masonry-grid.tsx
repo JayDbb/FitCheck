@@ -12,12 +12,7 @@ import { useState } from "react";
 import DynamicHeights from "./utils/dynamic-heights";
 import { useBottomTabOverflow } from "./utils/tab-bar-background";
 import { router } from "expo-router";
-
-interface Post {
-  id: string;
-  image: string;
-  title: string;
-}
+import { Post } from "@/types/posts";
 
 interface MasonryGrid {
   posts: Post[];
@@ -39,20 +34,10 @@ const MasonryGrid = ({
   // console.log(paddingBottom)
 
   const postHandler = (item: Post) => {
+    console.log(item);
     // Serialize the details to pass as query parameters (you can pass specific fields)
-    console.log(
-      "Navigating to details with id:",
-      item.id,
-      "title:",
-      item.title,
-      "image:",
-      item.image
-    );
-
     router.push(
-      `/(tabs)/home/details/${item.id}?title=${encodeURIComponent(
-        item.title
-      )}&image=${encodeURIComponent(item.image)}`
+      `/(tabs)/home/details/${item.imageURL}`
     );
   };
 
@@ -72,11 +57,11 @@ const MasonryGrid = ({
               .map((post) => (
                 <Pressable
                   style={styles.pinContainer}
-                  key={post.id}
+                  key={post.imageURL}
                   onPress={() => postHandler(post)}
                   className="rounded-lg"
                 >
-                  <DynamicHeights imageUri={post.image} id={post.id} />
+                  <DynamicHeights imageUri={post.imageURL} id={post.imageURL} />
 
                   {/* <Text >{post.title}</Text> */}
                 </Pressable>

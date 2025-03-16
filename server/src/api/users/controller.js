@@ -23,12 +23,12 @@ const createUser = async (req, res) => {
 
 /**
  * Retrieves a user by email.
- * @query {string} email - The email of the user to retrieve.
+ * @query {string} username - The username of the user to retrieve.
  * @returns {Object} User object if found, otherwise 404 error.
  */
 const getUser = async (req, res) => {
-    const email = req.query.email;
-    const user = await User.findOne({ email });
+    const username = req.username;
+    const user = await User.findOne({ username });
 
     if (!user) {
         return res.status(404).json({ message: 'User not found' });
