@@ -36,10 +36,10 @@ const MasonryGrid = ({
   const postHandler = (item: Post) => {
     console.log(item);
     // Serialize the details to pass as query parameters (you can pass specific fields)
-    router.push(
-      `/(tabs)/home/details/${item._id}?url=${item.imageURL}`
-    );
+    router.push(`/(tabs)/home/details/${item._id}?url=${item.imageURL}`);
   };
+
+  console.log(posts);
 
   return (
     <ScrollView
@@ -54,10 +54,10 @@ const MasonryGrid = ({
           <View style={styles.column} key={`column_${colIndex}`}>
             {posts
               .filter((_, index) => index % numColumns === colIndex)
-              .map((post) => (
+              .map((post, key) => (
                 <Pressable
                   style={styles.pinContainer}
-                  key={post.imageURL}
+                  key={key}
                   onPress={() => postHandler(post)}
                   className="rounded-lg"
                 >
