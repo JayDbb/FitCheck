@@ -22,15 +22,21 @@ const PostModal = () => {
   const [category, setCategory] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState('');
-  const [imageBase64, setImageBase64] = useState('');
-  const [imageUri, setImageUri] = useState('');
+  const [imageBase64, setImageBase64] = useState("");
+  const [imageUri, setImageUri] = useState("");
+  const inputAccessoryViewID = "uniqueID";
+
+  const userID = async () => {
+    const user = await AsyncStorage.getItem("user");
+    return JSON.parse(user as string)?.id;
+  };
 
   const handleImagePick = async () => {
     try {
       const permissionResult =
         await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (!permissionResult.granted) {
-        alert('Permission to access media library is required!');
+        alert("Permission to access media library is required!");
         return;
       }
 
@@ -50,14 +56,13 @@ const PostModal = () => {
         setImageBase64(base64);
       }
     } catch (error) {
-      console.error('Error picking image:', error);
+      console.error("Error picking image:", error);
     }
   };
 
-
   const handleSubmit = async () => {
     if (!type || !category || !imageBase64) {
-      Alert.alert('Error', 'Please provide type, category, and an image.');
+      Alert.alert("Error", "Please provide type, category, and an image.");
       return;
     }
 
@@ -78,8 +83,11 @@ const PostModal = () => {
 
       Alert.alert("Success", "Post created successfully!");
       console.log(response.data);
+      Alert.alert("Success", "Post created successfully!");
+      console.log(response.data);
     } catch (error) {
       console.error(error);
+      Alert.alert("Error", "There was an error creating your post.");
       Alert.alert("Error", "There was an error creating your post.");
     }
   };
@@ -129,7 +137,10 @@ const PostModal = () => {
       </View>
 
       {imageUri ? (
-        <Image source={{ uri: imageUri }} style={styles.imagePreview} />
+        <Image
+          source={{ uri: imageUri }}
+          className="w-24 h-48 rounded-md mt-2"
+        />
       ) : null}
 
       <InputAccessoryView nativeID={inputAccessoryViewID}>
