@@ -2,7 +2,7 @@ import { View, Text } from 'react-native'
 import React from 'react'
 import { Stack } from 'expo-router'
 
-const HomeLayout = () => {
+const PostLayout = () => {
   return (
     <Stack screenOptions={{
       headerShadowVisible: false,
@@ -24,4 +24,4 @@ const HomeLayout = () => {
   )
 }
 
-export default HomeLayout
+export default PostLayout
