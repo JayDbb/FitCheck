@@ -80,7 +80,7 @@ const PostModal = () => {
           headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${await token()}`
-          }
+          }}
         );
 
         console.log(response.data);
@@ -114,6 +114,7 @@ const PostModal = () => {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${await token()}`
         }
+      }
       );
 
       Alert.alert("Success", "Post created successfully!");
