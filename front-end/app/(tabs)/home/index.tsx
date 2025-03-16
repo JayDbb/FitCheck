@@ -8,6 +8,7 @@ import { Post } from "@/types/posts";
 import io from 'socket.io-client';
 
 
+
 const HomeScreen = () => {
 
   const socket = io(apiUrl); // Replace with your server URL

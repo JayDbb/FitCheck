@@ -27,22 +27,7 @@ const StarIcon = ({ color }: { color: string }) => (
   </Svg>
 );
 
-const getRangeText = (value: number) => {
-  switch (value) {
-    case 1:
-      return "1 - Very Bad";
-    case 2:
-      return "2 - Bad";
-    case 3:
-      return "3 - Good";
-    case 4:
-      return "4 - Very Good";
-    case 5:
-      return "5 - Excellent";
-    default:
-      return "";
-  }
-};
+
 
 const RatingSlider: React.FC<RatingSliderProps> = ({ rating, onRatingChange }) => {
   const [currentValue, setCurrentValue] = useState<number>(rating);
@@ -87,16 +72,14 @@ const RatingSlider: React.FC<RatingSliderProps> = ({ rating, onRatingChange }) =
           );
         })}
       </View>
-      {currentValue > 0 && (
-        <Text style={styles.text}>{getRangeText(currentValue)}</Text>
-      )}
+      
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: "center",
+    // alignItems: "flex-end",
     width: "100%",
   },
   starsContainer: {

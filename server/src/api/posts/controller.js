@@ -131,7 +131,7 @@ const loadFeed = async (req, res) => {
     // Fetch random posts (excluding the ones from followed users)
     const randomPosts = await Post.aggregate([
         { $match: { writterID: { $nin: followedUsers } } },
-        { $sample: { size: 5 } }
+        { $sample: { size: 30 } }
     ]);
 
     // Combine and shuffle
