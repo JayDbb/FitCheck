@@ -37,7 +37,7 @@ const MasonryGrid = ({
     console.log(item);
     // Serialize the details to pass as query parameters (you can pass specific fields)
     router.push(
-      `/(tabs)/home/details/${item.imageURL}`
+      `/(tabs)/home/details/${item._id}`
     );
   };
 
@@ -61,7 +61,7 @@ const MasonryGrid = ({
                   onPress={() => postHandler(post)}
                   className="rounded-lg"
                 >
-                  <DynamicHeights imageUri={post.imageURL} id={post.imageURL} />
+                  <DynamicHeights imageUri={post.imageURL} id={post._id} />
 
                   {/* <Text >{post.title}</Text> */}
                 </Pressable>

@@ -12,7 +12,7 @@ import { Post } from "@/types/posts";
 
 const SearchScreen = () => {
 
-  const { query } = useLocalSearchParams<{ query: string }>();
+  let { query } = useLocalSearchParams<{ query: string }>();
   const [filteredPins, setFilteredPins] = useState<Post[]>([]);
 
   const token = async () => {
@@ -22,6 +22,7 @@ const SearchScreen = () => {
 
   useEffect(() => {
     if (query) {
+      query = query.trim().toLowerCase();
       token().then((token)=>{
         const url = `${apiUrl}/posts/search?q=${query}`;
 

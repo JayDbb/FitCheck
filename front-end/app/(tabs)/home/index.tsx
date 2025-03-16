@@ -22,15 +22,11 @@ const HomeScreen = () => {
     return JSON.parse(user as string)?.token;
   };
 
-  const getToken = async () => {
-    return await AsyncStorage.getItem("token");
-  };
+ 
 
   const getUsername = async () => {
     try {
-      const token = await getToken();
-      if (!token) return null;
-      const response = await axios.get("https://fitcheck-server-c4dshjg7dthhcrea.eastus2-01.azurewebsites.net/users/get", {
+      const response = await axios.get(`${apiUrl}/users/get`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       return response.data.username;
@@ -43,31 +39,33 @@ const HomeScreen = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const userToken = await token();
-        if (!userToken) return;
-
-        const username = await getUsername();
-
-        if (!username) return;
-
+  
         token().then(token => {
-          axios.get(
-            `${apiUrl}/posts/load-feed?username=${username}`,
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          ).then((response) => {
-            const transformedData = response.data.map(({ _id, imageURL }: any) => ({
-              id: _id as string,
-              image: (imageURL || "") as string,
-            }));
-            setPosts(transformedData);
-          }).catch((error) => {
-            console.error("Error fetching posts:", error);
-          });
+          axios.get(`${apiUrl}/users/get`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }).then((response) => {
+            
+            const username = response.data.username;
+
+            axios.get(
+              `${apiUrl}/posts/load-feed?username=${username}`,
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            ).then((response) => {
+              const transformedData = response.data.map(({ _id, imageURL }: any) => ({
+                id: _id as string,
+                image: (imageURL || "") as string,
+              }));
+              setPosts(transformedData);
+            }).catch((error) => {
+              console.error("Error fetching posts:", error);
+            });
+          
+          })
         })
       } catch (error) {
         console.error("Error fetching posts:", error);

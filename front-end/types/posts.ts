@@ -1,4 +1,5 @@
 export interface Post {
+    _id: string,
     writterID: string,
     createdDate: string,
     ratings: [{}],
