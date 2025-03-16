@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
@@ -7,20 +8,17 @@ const userSchema = new mongoose.Schema({
     following: [{}]
 });
 
-// Hash password before saving to MongoDB
 userSchema.pre("save", async function (next) {
-    if (!this.isModified("password")) return next(); // Only hash if password is new/modified
-
+    if (!this.isModified("password")) return next(); 
     try {
-        const salt = await bcrypt.genSalt(10); // Generate salt
-        this.password = await bcrypt.hash(this.password, salt); // Hash password
+        const salt = await bcrypt.genSalt(10); 
+        this.password = await bcrypt.hash(this.password, salt);
         next();
     } catch (error) {
         next(error);
     }
 });
 
-// Method to compare passwords during login
 userSchema.methods.comparePassword = async function (enteredPassword) {
     return bcrypt.compare(enteredPassword, this.password);
 };

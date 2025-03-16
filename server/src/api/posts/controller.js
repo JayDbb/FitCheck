@@ -3,7 +3,7 @@ const Post = require('./model');
 const s3 = require("../../config/s3")
 const User = require("../users/model");
 const OpenAI = require('openai');
-const { shortenBase64Image } = require('../../util/shortenbase64');
+// const { shortenBase64Image } = require('../../util/shortenbase64');
 
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 

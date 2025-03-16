@@ -50,20 +50,16 @@ const followUser = async (req, res) => {
 
 const unfollowUser = async (req, res) => {
   const { username, following } = req.body;
+  const user = await User.findOne({ username });
 
-  try {
-    const user = await User.findOne({ username });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    user.following = user.following.filter((f) => f !== following);
-    await user.save();
-
-    res.status(200).json({ message: "User unfollowed successfully", user });
-  } catch (error) {
-    res.status(500).json({ message: "Error unfollowing user", error });
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
   }
+
+  user.following = user.following.filter((f) => f !== following);
+  await user.save();
+
+  res.status(200).json(user);
 };
 
 module.exports = {
