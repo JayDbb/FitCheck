@@ -4,10 +4,11 @@ import MasonryList from "@/components/ui/masonry-grid";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { apiUrl } from "@/config";
+import { Post } from "@/types/posts";
 
 const HomeScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<Post[]>([]);
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -44,7 +45,7 @@ const HomeScreen = () => {
           axios.get(`${apiUrl}/users/get`, {
             headers: { Authorization: `Bearer ${token}` },
           }).then((response) => {
-            
+
             const username = response.data.username;
 
             axios.get(
@@ -55,12 +56,8 @@ const HomeScreen = () => {
                   Authorization: `Bearer ${token}`,
                 },
               }
-            ).then((response) => {
-              const transformedData = response.data.map(({ _id, imageURL }: any) => ({
-                id: _id as string,
-                image: (imageURL || "") as string,
-              }));
-              setPosts(transformedData);
+            ).then((response: { data: Post[] }) => {
+              setPosts(response.data);
             }).catch((error) => {
               console.error("Error fetching posts:", error);
             });
