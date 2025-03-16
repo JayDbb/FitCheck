@@ -82,6 +82,11 @@ const Signup = () => {
           </TouchableOpacity>
         </View>
 
+        <View className="mt-8">
+          <TouchableOpacity onPress={() => router.push("/(tabs)/home")} className="bg-red-500 rounded-xl h-[50px] w-full items-center justify-center  px-2">
+            <Text className="text-white text-lg font-bold">Go to main</Text>
+          </TouchableOpacity>
+        </View>
 
       </View>
     </SafeAreaView>
