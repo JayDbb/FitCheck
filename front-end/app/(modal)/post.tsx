@@ -1,6 +1,7 @@
+import SelectDropdown from 'react-native-select-dropdown'
 import React, { useState } from "react";
 
-import { useColorScheme, View, Text, TextInput, Image, Alert, KeyboardAvoidingView, Platform, InputAccessoryView, StyleSheet } from "react-native";
+import { useColorScheme, View, Text, TextInput, Image, Alert, KeyboardAvoidingView, Platform, InputAccessoryView, StyleSheet, TouchableOpacity } from "react-native";
 import { Pressable } from "react-native";
 import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
@@ -209,6 +210,28 @@ const PostModal = () => {
               Post
             </Text>
           </Pressable>
+          <SelectDropdown 
+              dropdownStyle={{borderRadius:8}}
+              data={['Last 7 Days', 'Last 30 Days', 'Last 90 Days']}
+
+              onSelect={(selected) => console.log(selected)}
+
+              renderButton={(selected) => (
+                <TouchableOpacity className='bg-[#ff565630] p-2 rounded-lg w-32'>
+                    <Text className='color-glowBorder font-normal text-center'>{!selected ? 'Last 7 Days': selected}</Text>
+
+                </TouchableOpacity>
+              )}
+
+              
+              renderItem={(selected, idx, isSelected) => {
+                return (
+                  <View className='bg-lightBg p-3'>
+                    <Text className={isSelected ? `text-glowBorder`:`text-white`}>{selected}</Text>
+                  </View>
+                )
+              }}
+            />
         </View>
       </InputAccessoryView>
     </View>

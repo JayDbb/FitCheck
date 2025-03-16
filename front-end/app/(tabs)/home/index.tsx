@@ -5,10 +5,35 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { apiUrl } from "@/config";
 import { Post } from "@/types/posts";
+import io from 'socket.io-client';
+
 
 const HomeScreen = () => {
+
+  const socket = io(apiUrl); // Replace with your server URL
+
+  
+
   const [refreshing, setRefreshing] = useState(false);
   const [posts, setPosts] = useState<Post[]>([]);
+
+
+  useEffect(() => {
+    // Listen for the 'ratingUpdated' event in socket
+    socket.on('ratingUpdated', (updatedPost) => {
+      console.log('Rating updated:', updatedPost);
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post._id === updatedPost._id ? updatedPost : post
+        )
+      ); // Update post data with the new rating
+    });
+
+    // Clean up the socket connection on component unmount
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -23,19 +48,7 @@ const HomeScreen = () => {
     return JSON.parse(user as string)?.token;
   };
 
- 
 
-  const getUsername = async () => {
-    try {
-      const response = await axios.get(`${apiUrl}/users/get`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      return response.data.username;
-    } catch (error) {
-      console.error("Failed to fetch username", error);
-      return null;
-    }
-  };
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -70,6 +83,7 @@ const HomeScreen = () => {
     };
 
     fetchPosts();
+    
   }, []);
 
 

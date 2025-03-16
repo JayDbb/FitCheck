@@ -39,4 +39,8 @@ To test the endpoints, use the [Postman Collection](https://www.postman.com/cole
 - Ensure that you write the test cases for whatever feature you add
 - Read and follow the guidelines specified in [CONTRIBUTING.md](CONTRIBUTING.md).
 
+# Socket.IO
+- Socket.IO is used for real-time communication between the server and clients.
+- The server emits events to the clients when a new post is created or a rating is added.
+
 

@@ -1,50 +1,68 @@
-# Welcome to your Expo app 👋
+# FitCheck-Frontend
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## Technologies
+- Expo
+- React Native
+- NativeWind
 
-## Get started
+## Documentation
+- [React Native Documentation](https://reactnative.dev/docs/getting-started)
+- [NativeWind Documentation](https://www.nativewind.dev/)
+- [Expo Documentation](https://docs.expo.dev/)
+- [Node JS Tutorial](https://www.w3schools.com/nodejs/)
+- [MongoDB Documentation](https://www.mongodb.com/docs/drivers/node/current/usage-examples/)
 
-1. Install dependencies
+## Getting Started
 
-   ```bash
-   npm install
-   ```
+### Downloads
+To run the code, make sure the following are installed:
 
-2. Start the app
+- [Node.js](https://nodejs.org/en/download)
+- [Git](https://git-scm.com/downloads)
+- [Visual Studio Code (VSCode)](https://code.visualstudio.com/download)
+- [Expo CLI](https://docs.expo.dev/get-started/installation/)
 
-   ```bash
-    npx expo start
-   ```
+### Setup Instructions
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+1. Navigate to the project directory:
 
 ```bash
-npm run reset-project
+cd fitcheck-frontend
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### Installation
 
-## Learn more
+Install dependencies:
 
-To learn more about developing your project with Expo, look at the following resources:
+```bash
+npm install
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Running the App
 
-## Join the community
+Start the development server:
 
-Join our community of developers creating universal apps.
+```bash
+npx expo start
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Scan the QR code that appears in the terminal with the Expo Go app on your phone, or press `a` in the terminal to open it in an Android simulator or `i` for iOS (if you have the necessary setup).
+
+### Styling with NativeWind
+
+FitCheck uses NativeWind for utility-first styling with Tailwind-like classes. You can refer to [NativeWind Documentation](https://www.nativewind.dev/) for more details on how to use utility classes in your React Native components.
+
+### Testing the Application
+
+Run the application on your phone or simulator using the Expo CLI (`npm start`).
+Use Hot Reloading to instantly see changes on your device or emulator as you modify the code.
+To test your app on a real device, scan the QR code from the terminal using the Expo Go app.
+
+### Postman Collection (Backend API)
+
+To test the backend endpoints for FitCheck, use the [Postman Collection](https://www.getpostman.com/collections/f00d6f2af7d5c1e0a5a5).
+
+### Contributing Code
+
+Ensure that you follow the React Native and NativeWind guidelines for consistent code style and component structure.
+Write appropriate test cases for any new feature or fix.

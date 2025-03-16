@@ -3,6 +3,11 @@ const Post = require('./model');
 const s3 = require("../../config/s3")
 const User = require("../users/model");
 const OpenAI = require('openai');
+
+const server = require('../../index').server;
+const io = require('socket.io')(server);
+
+
 // const { shortenBase64Image } = require('../../util/shortenbase64');
 
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
@@ -301,6 +306,20 @@ const addComment = async (req, res) => {
     }
 };
 
+
+const getAllComments = async (req, res) => {
+    const { postID } = req.query;
+    const post = await Post.findById(postID);
+
+    if (!post) {
+        return res.status(404).json({ message: 'Post not found' });
+    }
+
+    io.emit('commentAdded', post);
+    
+    res.status(200).json(post.comments);
+};
+
 /**
  * Adds a rating to a post.
  * @body {string} postID - The ID of the post to rate.
@@ -325,6 +344,10 @@ const addRating = async (req, res) => {
         post.overallRating = post.ratings.reduce((acc, r) => acc + r.rating, 0) / post.ratings.length;
         await post.save();
 
+        io.emit('ratingUpdated', post); 
+
+
+
         res.status(200).json(post);
     } catch (error) {
         res.status(500).json({ message: 'Error adding rating', error });
@@ -340,5 +363,6 @@ module.exports = {
     getAIrating,
     scanImage,
     searchPosts,
-    loadFeed
+    loadFeed,
+    getAllComments
 };

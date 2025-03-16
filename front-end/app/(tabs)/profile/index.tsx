@@ -13,6 +13,7 @@ import MasonryList from "@/components/ui/masonry-grid";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import RatingSlider from "@/components/ui/rating-slider";
+import { apiUrl } from "@/config";
 
 const ProfileScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
@@ -30,24 +31,26 @@ const ProfileScreen = () => {
 
   const token = async () => {
     const user = await AsyncStorage.getItem("token");
-    return user;
+    return JSON.parse(user as string)?.token;
   };
 
-  const getToken = async () => {
-    return await AsyncStorage.getItem("token");
-  };
 
   const getUsername = async () => {
     try {
-      const token = await getToken();
-      if (!token) return null;
-      const response = await axios.get(
-        "https://fitcheck-server-c4dshjg7dthhcrea.eastus2-01.azurewebsites.net/users/get",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      return response.data.username;
+
+      const tokens = await token();
+      
+        const response = await axios.get(
+          `${apiUrl}/users/get`,
+          {
+            headers: { Authorization: `Bearer ${tokens}` },
+          }
+        );
+
+        console.log(response.data);
+        return response.data.username;
+
+      
     } catch (error) {
       console.error("Failed to fetch username", error);
       return null;
