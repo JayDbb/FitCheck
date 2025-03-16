@@ -2,6 +2,7 @@ import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, Pressable,
 import React, { useEffect, useState } from "react";
 import MasonryList from "@/components/ui/masonry-grid";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ProfileScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
@@ -14,23 +15,59 @@ const ProfileScreen = () => {
     }, 2000);
   };
 
+  const token = async () => {
+    const user = await AsyncStorage.getItem("token");
+    return user;
+  };
+
+  const getToken = async () => {
+    return await AsyncStorage.getItem("token");
+  };
+
+  const getUsername = async () => {
+    try {
+      const token = await getToken();
+      if (!token) return null;
+      const response = await axios.get("https://fitcheck-server-c4dshjg7dthhcrea.eastus2-01.azurewebsites.net/users/get", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return response.data.username;
+    } catch (error) {
+      console.error("Failed to fetch username", error);
+      return null;
+    }
+  };
+
   useEffect(() => {
-    const fetchPosts = async (username: string) => {
-      axios
-        .get(`https://fitcheck-server-c4dshjg7dthhcrea.eastus2-01.azurewebsites.net/posts/get-posts?username=${username}`)
+    const fetchPosts = async () => {
+      const userToken = await token();
+      if (!userToken) return;
+      
+      const username = await getUsername();
+     
+      if (!username) return;
+
+   
+      await axios
+        .get(`https://fitcheck-server-c4dshjg7dthhcrea.eastus2-01.azurewebsites.net/posts/get-posts?username=${username}`, {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${userToken}`, 
+          },
+        })
         .then((response) => {
-          console.log(response.data, "results", username);
           const fetchedPosts = response.data.map((post: any) => ({
             id: post._id,
             image: post.imageURL,
           }));
+          console.log(fetchedPosts)
           setPosts(fetchedPosts);
         })
         .catch((error) => {
           console.error(error);
         });
     };
-    fetchPosts("JamariTheGreat");
+    fetchPosts();
   }, []);
 
   return (
@@ -53,7 +90,7 @@ const ProfileScreen = () => {
       </View>
       <View>
         <Text style={styles.galleryTitle}>Latest Post of JamarTG</Text>
-        {JSON.stringify(posts)}
+
         <SafeAreaView className="flex-1">
           <MasonryList
             posts={posts}
