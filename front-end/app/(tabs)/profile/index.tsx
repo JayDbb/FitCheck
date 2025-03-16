@@ -1,7 +1,38 @@
-import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, Pressable, SafeAreaView } from "react-native";
+import { View, Text, Image, StyleSheet, ScrollView,  Pressable } from "react-native";
 import React, { useEffect, useState } from "react";
 import MasonryList from "@/components/ui/masonry-grid";
 import axios from "axios";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { router } from "expo-router";
+import { SymbolView } from "expo-symbols";
+
+const pins = [
+  {
+    id: "0",
+    image: "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/pinterest/0.jpeg",
+    title: "notJust Dev Hoodie",
+  },
+  {
+    id: "1",
+    image: "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/pinterest/1.jpeg",
+    title: "Programmer working on laptop computer in office studio",
+  },
+  {
+    id: "2",
+    image: "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/pinterest/2.jpeg",
+    title: "computer setup | computer setup idea | black wallpaper #computersetupideas",
+  },
+  {
+    id: "3",
+    image: "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/pinterest/3.jpeg",
+    title: "",
+  },
+  {
+    id: "4",
+    image: "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/pinterest/4.jpeg",
+    title: "White Tesla ",
+  },
+];
 
 const ProfileScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
@@ -35,105 +66,73 @@ const ProfileScreen = () => {
 
   return (
     <ScrollView>
-      <View style={styles.profileContainer}>
-        <View style={styles.names}>
-          <Text style={styles.largeName}>@JamarTG</Text>
-          <Text style={styles.smallName}>{"@jamarTG".toLocaleLowerCase()}</Text>
-          <Pressable style={styles.followButton}>
-            <Text style={styles.followButtonText}>Follow</Text>
+      <SafeAreaView className="px-2 pt-2 ">
+        {/* Header */}
+        <View className="h-[44px] px-2 flex-row justify-end items-center">
+
+          <Pressable>
+          <SymbolView
+              name="line.3.horizontal"
+              type="hierarchical"
+        
+              size={30}
+            />
           </Pressable>
         </View>
-        <Image
-          style={styles.profilePicture}
-          source={{ uri: "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg?20200418092106" }}
-        />
-      </View>
-      <View style={styles.bioContainer}>
-        <Text style={styles.bioText}>Fashion enthusiast. Love to share my daily outfits and style tips!</Text>
-      </View>
-      <View>
-        <Text style={styles.galleryTitle}>Latest Post of JamarTG</Text>
-        
-        <SafeAreaView className="flex-1">
-          <MasonryList
-            posts={posts}
+
+        {/* Profile Section */}
+        <View className="flex-row items-center mt-4">
+          <View className="flex-1">
+            <Text className="text-3xl font-bold text-primary-200">
+              cajaun
+            </Text>
+            <Text className="text-base text-secondary-400 mt-2">
+              @cajaun
+            </Text>
+          </View>
+          <Image
+            source={{ uri: "https://picsum.photos/seed/696/3000/2000" }}
+            style={{
+              height: 70,
+              width: 70,
+              borderRadius: 35,
+            }}
+          />
+        </View>
+
+
+
+        <View className="mt-4">
+          <Text className="text-base text-secondary-400">8 posts</Text>
+        </View>
+
+        {/* Buttons */}
+        <View className="flex-row justify-between mt-4 w-full gap-4">
+          <Pressable
+            // onPress={() => router.push("/(modal)/editProfile")}
+            className="bg-white border border-secondary-300 rounded-xl h-[35px] flex-1 items-center justify-center px-2"
+          >
+            <Text className="text-primary-200 font-bold">Edit Profile</Text>
+          </Pressable>
+          <Pressable className="bg-white border border-secondary-300 rounded-xl h-[35px] flex-1 items-center justify-center px-2">
+            <Text className="text-primary-200 font-bold">Share Profile</Text>
+          </Pressable>
+        </View>
+
+    <View className = "pt-4">
+
+
+        <MasonryList
+            posts={pins}
             refreshing={refreshing}
             onRefresh={onRefresh}
           />
-        </SafeAreaView>
-      </View>
+          </View>
+
+      </SafeAreaView>
     </ScrollView>
   );
 };
 
-const styles = StyleSheet.create({
-  profileContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#D3D3D3",
-    borderRadius: 10,
-    padding: 10,
-    margin: 10,
-    backgroundColor: "#fff",
-  },
-  names: {
-    flex: 1,
-  },
-  largeName: {
-    fontWeight: "bold",
-    fontSize: 23,
-    color: "#333",
-  },
-  smallName: {
-    fontSize: 16,
-    color: "#666",
-  },
-  profilePicture: {
-    width: 100,
-    height: 100,
-    borderWidth: 1,
-    borderColor: "grey",
-    borderRadius: 50,
-  },
-  bioContainer: {
-    padding: 10,
-    margin: 10,
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "#D3D3D3",
-  },
-  bioText: {
-    fontSize: 16,
-    color: "#333",
-  },
-
-  galleryTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-  galleryImage: {
-    width: 100,
-    height: 100,
-    marginRight: 10,
-    borderRadius: 10,
-  },
-  followButton: {
-    backgroundColor: "grey",
-
-    padding: 10,
-    margin: 10,
-    borderRadius: 10,
-    alignItems: "center",
-  },
-  followButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-});
 
 export default ProfileScreen;

@@ -49,11 +49,11 @@ const MasonryGrid = ({
       item.image
     );
 
-    // router.push(
-    //   `/(tabs)/home//details/${item.id}?title=${encodeURIComponent(
-    //     item.title
-    //   )}&image=${encodeURIComponent(item.image)}`
-    // );
+    router.push(
+      `/(tabs)/home/details/${item.id}?title=${encodeURIComponent(
+        item.title
+      )}&image=${encodeURIComponent(item.image)}`
+    );
   };
 
   return (
