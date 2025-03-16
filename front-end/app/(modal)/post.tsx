@@ -20,21 +20,17 @@ import { SymbolView } from "expo-symbols";
 const PostModal = () => {
   const [type, setType] = useState("");
   const [category, setCategory] = useState("");
-  const [imageBase64, setImageBase64] = useState("");
-  const [imageUri, setImageUri] = useState("");
-  const inputAccessoryViewID = "uniqueID";
-
-  const userID = async () => {
-    const user = await AsyncStorage.getItem("user");
-    return JSON.parse(user as string)?.id;
-  };
+  const [tags, setTags] = useState<string[]>([]);
+  const [tagInput, setTagInput] = useState('');
+  const [imageBase64, setImageBase64] = useState('');
+  const [imageUri, setImageUri] = useState('');
 
   const handleImagePick = async () => {
     try {
       const permissionResult =
         await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (!permissionResult.granted) {
-        alert("Permission to access media library is required!");
+        alert('Permission to access media library is required!');
         return;
       }
 
@@ -54,31 +50,31 @@ const PostModal = () => {
         setImageBase64(base64);
       }
     } catch (error) {
-      console.error("Error picking image:", error);
+      console.error('Error picking image:', error);
     }
   };
 
+
   const handleSubmit = async () => {
     if (!type || !category || !imageBase64) {
-      Alert.alert("Error", "Please provide type, category, and an image.");
+      Alert.alert('Error', 'Please provide type, category, and an image.');
       return;
     }
 
     try {
-      const response = await axios.post(
-        "http://localhost:8081/posts/create-post",
-        {
-          type,
-          category,
-          imageBase64,
-          caption: "",
-          taggedShirt: "",
-          taggedPants: "",
-          taggedShoes: "",
-          AIrating: 4.0,
-          userID,
-        }
-      );
+      const response = await axios.post('http://localhost:8081/create-post', {
+        type,
+        category,
+        tags,
+        imageBase64,
+        caption : "",
+        "taggedShirt":"",
+        "taggedPants": "",
+        "taggedShoes": "",
+        "AIrating": 4.0,
+        
+        
+      });
 
       Alert.alert("Success", "Post created successfully!");
       console.log(response.data);
@@ -87,6 +83,18 @@ const PostModal = () => {
       Alert.alert("Error", "There was an error creating your post.");
     }
   };
+
+  const addTag = () => {
+    if (tagInput.trim() == "") return;
+
+    setTags([...tags, tagInput.toLocaleLowerCase().trim()]);
+    setTagInput("");
+  };
+
+  const removeTag = (index: number) => {
+    setTags(tags.filter((_, i) => i !== index));
+  };
+
 
   return (
     <View className="p-4">
@@ -121,10 +129,7 @@ const PostModal = () => {
       </View>
 
       {imageUri ? (
-        <Image
-          source={{ uri: imageUri }}
-          className="w-24 h-48 rounded-md mt-2"
-        />
+        <Image source={{ uri: imageUri }} style={styles.imagePreview} />
       ) : null}
 
       <InputAccessoryView nativeID={inputAccessoryViewID}>
