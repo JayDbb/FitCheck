@@ -2,18 +2,17 @@ import express from 'express';
 import controller from './controller';
 
 const router = express.Router();
-import verifyToken from '../auth/authMiddleware';
 
-router.post('/create-post', verifyToken, controller.createPost); 
-router.post('/add-rating', verifyToken, controller.addRating);
-router.post('/add-comment',verifyToken, controller.addComment);
-router.post('/get-ai-rating',verifyToken, controller.getAIrating);
-router.post('/scan-image',verifyToken, controller.scanImage);
+router.post('/create-post',  controller.createPost); 
+router.post('/add-rating',  controller.addRating);
+router.post('/add-comment', controller.addComment);
+router.post('/get-ai-rating', controller.getAIrating);
+router.post('/scan-image', controller.scanImage);
 
-router.get('/get-posts', verifyToken, controller.getUserPosts);
-router.get('/search', verifyToken, controller.searchPosts);
+router.get('/get-posts',  controller.getUserPosts);
+router.get('/search',  controller.searchPosts);
 
-router.delete('/delete-post',verifyToken, controller.deletePost);
+router.delete('/delete-post', controller.deletePost);
 
 
 module.exports = router;
