@@ -39,6 +39,4 @@ To test the endpoints, use the [Postman Collection](https://www.postman.com/cole
 - Ensure that you write the test cases for whatever feature you add
 - Read and follow the guidelines specified in [CONTRIBUTING.md](CONTRIBUTING.md).
 
-# Deploying to Production
-> For club admins only
 
