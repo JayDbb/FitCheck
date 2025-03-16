@@ -8,7 +8,7 @@ import { SymbolView } from "expo-symbols";
 import BlurTabBarBackground from "@/components/ui/utils/tab-bar-background";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const color = useColorScheme();
   return (
     <Tabs
       screenOptions={{
@@ -16,7 +16,7 @@ export default function TabLayout() {
         headerShown: false,
         // tabBarBackground: BlurTabBarBackground,
         tabBarStyle: {
-          backgroundColor: 'white',
+          backgroundColor: color === "light" ? "#fff" : "#000",
           position: 'absolute',
         },
       }}
