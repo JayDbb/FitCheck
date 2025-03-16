@@ -10,9 +10,7 @@ const createUser = async (req, res) => {
       email,
       password,
     });
-
-    const token = jwt.sign(username, process.env.TOKEN_SECRET, { expiresIn: "7d" }, accessToken);
-
+    const token = jwt.sign(user.username, process.env.TOKEN_SECRET, { expiresIn: "7d" }, accessToken);
     res.status(201).json({ token });
   } catch (error) {
     res.status(500).json({ message: "Error creating user", error });
@@ -30,30 +28,42 @@ const getUser = async (req, res) => {
 
 const followUser = async (req, res) => {
   const { username, following } = req.body;
-  const user = await User.findOne({ username });
 
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
+  try {
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (user.following.includes(following)) {
+      return res.status(400).json({ message: "Already following ${user.username || 'this user'}" });
+    }
+
+    user.following.push(following);
+    await user.save();
+
+    res.status(200).json({ message: "User followed successfully", user });
+  } catch (error) {
+    res.status(500).json({ message: "Error following user", error });
   }
-
-  user.following.push(following);
-  await user.save();
-
-  res.status(200).json(user);
 };
 
 const unfollowUser = async (req, res) => {
   const { username, following } = req.body;
-  const user = await User.findOne({ username });
 
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
+  try {
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.following = user.following.filter((f) => f !== following);
+    await user.save();
+
+    res.status(200).json({ message: "User unfollowed successfully", user });
+  } catch (error) {
+    res.status(500).json({ message: "Error unfollowing user", error });
   }
-
-  user.following = user.following.filter((f) => f !== following);
-  await user.save();
-
-  res.status(200).json(user);
 };
 
 module.exports = {
