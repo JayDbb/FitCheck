@@ -1,17 +1,17 @@
 {
-  "name": "colearn-server",
+  "name": "fitcheck-server",
   "version": "1.0.0",
   "description": "",
-  "homepage": "https://github.com/gdsc-utech/CoLearn-Server#readme",
+  "homepage": "https://github.com/gdsc-utech/FitCheck-Server#readme",
   "bugs": {
-    "url": "https://github.com/gdsc-utech/CoLearn-Server/issues"
+    "url": "https://github.com/gdsc-utech/FitCheck-Server/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gdsc-utech/CoLearn-Server.git"
+    "url": "git+https://github.com/gdsc-utech/FitCheck-Server.git"
   },
   "license": "ISC",
-  "author": "Future Developers Club",
+  "author": "FitCheck+",
   "type": "commonjs",
   "main": "src/index.js",
   "scripts": {
@@ -34,6 +34,7 @@
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.10.1",
+    "morgan": "^1.10.0",
     "nodemon": "^3.1.9",
     "openai": "^4.87.3",
     "uuid": "^11.1.0"

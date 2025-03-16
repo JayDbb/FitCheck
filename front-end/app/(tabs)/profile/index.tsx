@@ -16,18 +16,19 @@ const ProfileScreen = () => {
 
   useEffect(() => {
     const fetchPosts = async (username: string) => {
-      axios.get(`http://localhost:3000/posts/get-posts?username=${username}`).then((response) => {
-        console.log(response.data,"results");
-        const fetchedPosts = response.data.map((post: any) => ({
-          id: post._id,
-          image: post.imageURL,
-        }));
-        setPosts(fetchedPosts);
-
-
-      }).catch((error) => {
-        console.error(error);
-      });
+      axios
+        .get(`http://localhost:3000/posts/get-posts?username=${username}`)
+        .then((response) => {
+          console.log(response.data, "results", username);
+          const fetchedPosts = response.data.map((post: any) => ({
+            id: post._id,
+            image: post.imageURL,
+          }));
+          setPosts(fetchedPosts);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     };
     fetchPosts("JamariTheGreat");
   }, []);
@@ -51,16 +52,15 @@ const ProfileScreen = () => {
         <Text style={styles.bioText}>Fashion enthusiast. Love to share my daily outfits and style tips!</Text>
       </View>
       <View>
-
         <Text style={styles.galleryTitle}>Latest Post of JamarTG</Text>
-
-          <SafeAreaView className="flex-1">
+        
+        <SafeAreaView className="flex-1">
           <MasonryList
             posts={posts}
             refreshing={refreshing}
             onRefresh={onRefresh}
           />
-          </SafeAreaView>
+        </SafeAreaView>
       </View>
     </ScrollView>
   );
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#333",
   },
- 
+
   galleryTitle: {
     fontSize: 18,
     fontWeight: "bold",

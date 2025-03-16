@@ -8,8 +8,9 @@ const PostModal = () => {
   const [category, setCategory] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState('');
-  const [imageBase64, setImageBase64] = useState('');
-  const [imageUri, setImageUri] = useState('');
+  const [imageBase64, setImageBase64] = useState("");
+  const [imageUri, setImageUri] = useState("");
+
 
   const handleImagePick = async () => {
     try {
@@ -54,8 +55,11 @@ const PostModal = () => {
 
       Alert.alert("Success", "Post created successfully!");
       console.log(response.data);
+      Alert.alert("Success", "Post created successfully!");
+      console.log(response.data);
     } catch (error) {
       console.error(error);
+      Alert.alert("Error", "There was an error creating your post.");
       Alert.alert("Error", "There was an error creating your post.");
     }
   };

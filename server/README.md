@@ -31,7 +31,7 @@ To run the code you can refer to the following to be installed:
     npm run dev
    ```
 
-To test the endpoints, use the [Postman Collection](https://app.getpostman.com/join-team?invite_code=a4619b8d9e5e4bd9b41f81b724205382d3ef4e2bc7825c8140740c7856c87ed0)
+To test the endpoints, use the [Postman Collection](https://www.postman.com/colearn-team/workspace/fitcheck/collection/25249658-04296b23-8cdd-4d47-8548-5cef0c249b59?action=share&creator=25249658)
 
 
 

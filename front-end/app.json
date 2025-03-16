@@ -1,7 +1,9 @@
 {
+  "name": "fitcheck",
+  "displayName": "fitcheck",
   "expo": {
-    "name": "front-end",
-    "slug": "front-end",
+    "name": "fitcheck",
+    "slug": "fitcheck",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -9,7 +11,11 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.justinthedev.frontend",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -36,6 +42,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "5eb57e45-6a15-400f-97f5-b8e5861bddaa"
+      }
     }
   }
 }

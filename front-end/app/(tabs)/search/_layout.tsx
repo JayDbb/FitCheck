@@ -12,6 +12,7 @@ const SearchLayout = () => {
       <Stack.Screen
         name="index"
         options={{
+  
           headerShadowVisible: false,
           title: "Search",
           headerTransparent: true,
