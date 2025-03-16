@@ -3,27 +3,20 @@ import { View, Text, TextInput, Button, Image, StyleSheet, Alert, TouchableOpaci
 import axios from 'axios';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const PostModal = () => {
-  const [type, setType] = useState('');
-  const [category, setCategory] = useState('');
+  const [type, setType] = useState("");
+  const [category, setCategory] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState('');
   const [imageBase64, setImageBase64] = useState('');
   const [imageUri, setImageUri] = useState('');
 
-  const userID = async () => {
-    const user = await AsyncStorage.getItem('user');
-    return JSON.parse(user as string)?.id;
-  };
-
-
   const handleImagePick = async () => {
     try {
       const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (!permissionResult.granted) {
-        alert('Permission to access media library is required!');
+        alert("Permission to access media library is required!");
         return;
       }
 
@@ -41,21 +34,21 @@ const PostModal = () => {
         const base64 = await FileSystem.readAsStringAsync(uri, {
           encoding: FileSystem.EncodingType.Base64,
         });
-        setImageBase64(base64);  // Set the base64 string
+        setImageBase64(base64); // Set the base64 string
       }
     } catch (error) {
-      console.error('Error picking image:', error);
+      console.error("Error picking image:", error);
     }
   };
 
   const handleSubmit = async () => {
     if (!type || !category || !imageBase64) {
-      Alert.alert('Error', 'Please provide type, category, and an image.');
+      Alert.alert("Error", "Please provide type, category, and an image.");
       return;
     }
 
     try {
-      const response = await axios.post('http://localhost:3000/posts/create-post', {
+      const response = await axios.post('http://localhost:8081/create-post', {
         type,
         category,
         tags,
@@ -65,24 +58,23 @@ const PostModal = () => {
         "taggedPants": "",
         "taggedShoes": "",
         "AIrating": 4.0,
-        userID
+        
         
       });
 
-      Alert.alert('Success', 'Post created successfully!');
-      console.log(response.data); 
+      Alert.alert("Success", "Post created successfully!");
+      console.log(response.data);
     } catch (error) {
       console.error(error);
-      Alert.alert('Error', 'There was an error creating your post.');
+      Alert.alert("Error", "There was an error creating your post.");
     }
   };
 
   const addTag = () => {
-    if (tagInput.trim() == '') return;
+    if (tagInput.trim() == "") return;
 
     setTags([...tags, tagInput.toLocaleLowerCase().trim()]);
-    setTagInput('');
-    
+    setTagInput("");
   };
 
   const removeTag = (index: number) => {
@@ -92,7 +84,7 @@ const PostModal = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Create a New Post</Text>
-      
+
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -101,7 +93,7 @@ const PostModal = () => {
           onChangeText={setType}
         />
         {type ? (
-          <TouchableOpacity onPress={() => setType('')}>
+          <TouchableOpacity onPress={() => setType("")}>
             <Text>X</Text>
           </TouchableOpacity>
         ) : null}
@@ -115,7 +107,7 @@ const PostModal = () => {
           onChangeText={setCategory}
         />
         {category ? (
-          <TouchableOpacity onPress={() => setCategory('')}>
+          <TouchableOpacity onPress={() => setCategory("")}>
             <Text>x</Text>
           </TouchableOpacity>
         ) : null}
@@ -124,7 +116,10 @@ const PostModal = () => {
       <View style={styles.inputContainer}>
         <View style={styles.tagsInput}>
           {tags.map((tag, index) => (
-            <View key={index} style={styles.tag}>
+            <View
+              key={index}
+              style={styles.tag}
+            >
               <Text style={styles.tagText}>{tag}</Text>
               <TouchableOpacity onPress={() => removeTag(index)}>
                 <Text style={styles.removeButton}>x</Text>
@@ -142,13 +137,21 @@ const PostModal = () => {
         </View>
       </View>
 
-    
-      <Button title="Pick an Image" onPress={handleImagePick} />
+      <Button
+        title="Pick an Image"
+        onPress={handleImagePick}
+      />
       {imageUri ? (
-        <Image source={{ uri: imageUri }} style={styles.imagePreview} />
+        <Image
+          source={{ uri: imageUri }}
+          style={styles.imagePreview}
+        />
       ) : null}
 
-      <Button title="Create Post" onPress={handleSubmit} />
+      <Button
+        title="Create Post"
+        onPress={handleSubmit}
+      />
     </View>
   );
 };
@@ -160,13 +163,12 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
   },
-  inputContainer: { 
-    flexDirection: 'row',
-    alignItems: 'center',
-
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
     borderWidth: 1,
     marginBottom: 10,
     paddingHorizontal: 8,
@@ -174,41 +176,39 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     height: 40,
-    color: 'black',
+    color: "black",
   },
-  
+
   tagsInput: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "center",
     flex: 1,
-  
   },
   tagInput: {
     flex: 1,
     height: 40,
-    color: 'black',
-    borderWidth: 0
+    color: "black",
+    borderWidth: 0,
   },
   tag: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#e0e0e0',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#e0e0e0",
     padding: 4,
     margin: 4,
-    
   },
   tagText: {
     marginRight: 8,
   },
   removeButton: {
-    color: 'red',
+    color: "red",
   },
   imagePreview: {
     width: 100,
     height: 100,
     marginVertical: 10,
-    resizeMode: 'cover',
+    resizeMode: "cover",
   },
 });
 
