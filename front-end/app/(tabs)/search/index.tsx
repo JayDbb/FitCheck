@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams } from 'expo-router';
 import MasonryList from "@/components/ui/masonry-grid"; // Assuming this is the same MasonryList component
+import axios from "axios";
 
 interface Pin {
   id: string;
@@ -14,6 +15,8 @@ const SearchScreen = () => {
 
   const { query } = useLocalSearchParams<{ query: string }>();
   const [filteredPins, setFilteredPins] = useState<Pin[]>([]);
+
+  
 
   const pins: Pin[] = [
     {
@@ -70,10 +73,16 @@ const SearchScreen = () => {
 
   useEffect(() => {
     if (query) {
-      const filteredPinsOnQuery = pins.filter((pin) =>
-        pin.title.toLowerCase().includes(query.toLowerCase())
-      );
-      setFilteredPins(filteredPinsOnQuery);
+
+      axios.post('http://localhost:3000/posts/search', {
+        q: query
+        
+      }).then((response) => {
+        setFilteredPins(response.data);
+      }).catch((error) => {
+        console.error(error);
+      });
+
     } else {
       setFilteredPins(pins);
     }

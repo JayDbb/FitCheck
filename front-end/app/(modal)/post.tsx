@@ -3,6 +3,7 @@ import { View, Text, TextInput, Button, Image, StyleSheet, Alert, TouchableOpaci
 import axios from 'axios';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const PostModal = () => {
   const [type, setType] = useState('');
@@ -11,6 +12,12 @@ const PostModal = () => {
   const [tagInput, setTagInput] = useState('');
   const [imageBase64, setImageBase64] = useState('');
   const [imageUri, setImageUri] = useState('');
+
+  const userID = async () => {
+    const user = await AsyncStorage.getItem('user');
+    return JSON.parse(user as string)?.id;
+  };
+
 
   const handleImagePick = async () => {
     try {
@@ -48,11 +55,18 @@ const PostModal = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:8081/create-post', {
+      const response = await axios.post('http://localhost:3000/posts/create-post', {
         type,
         category,
         tags,
         imageBase64,
+        caption : "",
+        "taggedShirt":"",
+        "taggedPants": "",
+        "taggedShoes": "",
+        "AIrating": 4.0,
+        userID
+        
       });
 
       Alert.alert('Success', 'Post created successfully!');
