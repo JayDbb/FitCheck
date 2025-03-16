@@ -23,9 +23,9 @@ export default function Index() {
 
   // Initialize Google Sign-In request
   const [request, response, promptAsync] = Google.useAuthRequest({
-    androidClientId: "YOUR_ANDROID_CLIENT_ID.apps.googleusercontent.com",
-    iosClientId: "YOUR_IOS_CLIENT_ID.apps.googleusercontent.com",
-    webClientId: "YOUR_WEB_CLIENT_ID.apps.googleusercontent.com",
+    // androidClientId: "616664580407-g18m9psaahv38me89an1pdcrq0n0fm8p.apps.googleusercontent.com",
+    iosClientId: "616664580407-easin3n0t8atk8hp3f9ktrulfg2n2qo5.apps.googleusercontent.com",
+    webClientId: "616664580407-g18m9psaahv38me89an1pdcrq0n0fm8p.apps.googleusercontent.com",
   });
   
 
