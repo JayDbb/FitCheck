@@ -17,7 +17,11 @@
 		7DD7A07B2D868021005C3839 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7DD7A0792D868021005C3839 /* GoogleService-Info.plist */; };
 		7DD7A07E2D8683D2005C3839 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 7DD7A07D2D8683D2005C3839 /* FirebaseAnalytics */; };
 		7DD7A0802D8683D2005C3839 /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = 7DD7A07F2D8683D2005C3839 /* FirebaseAppCheck */; };
+		7DD7A0822D868B02005C3839 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 7DD7A0812D868B02005C3839 /* FirebaseAuth */; };
+		7DD7A0842D868B02005C3839 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7DD7A0832D868B02005C3839 /* FirebaseCore */; };
+		7DD7A0862D868B02005C3839 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 7DD7A0852D868B02005C3839 /* FirebaseFirestore */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		82B49857E8F116333EE39863 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,8 +70,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				7DD7A07E2D8683D2005C3839 /* FirebaseAnalytics in Frameworks */,
+				7DD7A0842D868B02005C3839 /* FirebaseCore in Frameworks */,
 				7DD7A0802D8683D2005C3839 /* FirebaseAppCheck in Frameworks */,
 				0C80B921A6F3F58F76C31292 /* libPods-fitcheck.a in Frameworks */,
+				7DD7A0822D868B02005C3839 /* FirebaseAuth in Frameworks */,
+				7DD7A0862D868B02005C3839 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -258,6 +265,7 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				7DD7A07B2D868021005C3839 /* GoogleService-Info.plist in Resources */,
+				82B49857E8F116333EE39863 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -597,7 +605,14 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
+				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
+				USE_HERMES = true;
 			};
 			name = Debug;
 		};
@@ -662,7 +677,13 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
+				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
+				USE_HERMES = true;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -720,6 +741,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 7DD7A07C2D8683D2005C3839 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAppCheck;
+		};
+		7DD7A0812D868B02005C3839 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7DD7A07C2D8683D2005C3839 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		7DD7A0832D868B02005C3839 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7DD7A07C2D8683D2005C3839 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		7DD7A0852D868B02005C3839 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7DD7A07C2D8683D2005C3839 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

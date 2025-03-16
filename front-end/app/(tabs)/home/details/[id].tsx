@@ -30,8 +30,8 @@ let endNode;
 
 
  
-      <Animated.Image
-        sharedTransitionTag={Array.isArray(id) ? id[0] : id}
+      <Image
+
         source={{ uri: Array.isArray(image) ? image[0] : image }}
         style={{ width: "100%", height: "100%" }}
       />

@@ -7,16 +7,12 @@ import {
   getAuth, 
   GoogleAuthProvider,
   initializeAuth, 
-  getReactNativePersistence, 
+  // @ts-ignore
+  // getReactNativePersistence,
   signInWithCredential, 
   User 
 } from 'firebase/auth';
-import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 
-// Ensure Firebase Auth is initialized globally with persistence
-const auth = initializeAuth(app, {
-  persistence: getReactNativePersistence(ReactNativeAsyncStorage) 
-});
 
 export default function Index() {
   const [user, setUser] = useState<User | null>(null);
@@ -29,18 +25,18 @@ export default function Index() {
   });
   
 
-  useEffect(() => {
-    if (response?.type === "success" && response.authentication) {
-      const credential = GoogleAuthProvider.credential(null, response.authentication.accessToken);
+  // useEffect(() => {
+  //   if (response?.type === "success" && response.authentication) {
+  //     const credential = GoogleAuthProvider.credential(null, response.authentication.accessToken);
       
-      signInWithCredential(auth, credential).then(userCredential => {
-        setUser(userCredential.user);
-        router.push("/(tabs)/home");
-      }).catch(error => {
-        console.error("Sign-in Error", error);
-      });
-    }
-  }, [response]);
+  //     signInWithCredential(auth, credential).then(userCredential => {
+  //       setUser(userCredential.user);
+  //       router.push("/(tabs)/home");
+  //     }).catch(error => {
+  //       console.error("Sign-in Error", error);
+  //     });
+  //   }
+  // }, [response]);
 
   const handleLoginGoogle = async () => {
     await promptAsync();
