@@ -1,4 +1,13 @@
-import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, Pressable, SafeAreaView } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ScrollView,
+  Pressable,
+  SafeAreaView,
+  useColorScheme,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import MasonryList from "@/components/ui/masonry-grid";
 import axios from "axios";
@@ -7,6 +16,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const ProfileScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [posts, setPosts] = useState([]);
+
+  const theme = useColorScheme();
+
   const onRefresh = () => {
     setRefreshing(true);
 
@@ -28,9 +40,12 @@ const ProfileScreen = () => {
     try {
       const token = await getToken();
       if (!token) return null;
-      const response = await axios.get("https://fitcheck-server-c4dshjg7dthhcrea.eastus2-01.azurewebsites.net/users/get", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+        "https://fitcheck-server-c4dshjg7dthhcrea.eastus2-01.azurewebsites.net/users/get",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       return response.data.username;
     } catch (error) {
       console.error("Failed to fetch username", error);
@@ -42,25 +57,27 @@ const ProfileScreen = () => {
     const fetchPosts = async () => {
       const userToken = await token();
       if (!userToken) return;
-      
+
       const username = await getUsername();
-     
+
       if (!username) return;
 
-   
       await axios
-        .get(`https://fitcheck-server-c4dshjg7dthhcrea.eastus2-01.azurewebsites.net/posts/get-posts?username=${username}`, {
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${userToken}`, 
-          },
-        })
+        .get(
+          `https://fitcheck-server-c4dshjg7dthhcrea.eastus2-01.azurewebsites.net/posts/get-posts?username=${username}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${userToken}`,
+            },
+          }
+        )
         .then((response) => {
           const fetchedPosts = response.data.map((post: any) => ({
             id: post._id,
             image: post.imageURL,
           }));
-          console.log(fetchedPosts)
+          console.log(fetchedPosts);
           setPosts(fetchedPosts);
         })
         .catch((error) => {
@@ -71,35 +88,67 @@ const ProfileScreen = () => {
   }, []);
 
   return (
-    <ScrollView>
-      <View style={styles.profileContainer}>
-        <View style={styles.names}>
-          <Text style={styles.largeName}>@JamarTG</Text>
-          <Text style={styles.smallName}>{"@jamarTG".toLocaleLowerCase()}</Text>
-          <Pressable style={styles.followButton}>
-            <Text style={styles.followButtonText}>Follow</Text>
+    <SafeAreaView className="px-4 pt-2">
+      <ScrollView>
+        {/* Header */}
+        <View className="h-[44px] flex-row justify-between items-center"></View>
+
+        {/* Profile Section */}
+        <View className="flex-row items-center mt-4">
+          <View className="flex-1">
+            <Text
+              className="text-3xl font-bold "
+              style={{ color: theme === "light" ? "#000" : "#fff" }}
+            >
+              cajaun
+            </Text>
+            <Text
+              className="text-base text-secondary-400 mt-2"
+              style={{ color: theme === "light" ? "#000" : "#fff" }}
+            >
+              @cajaun
+            </Text>
+          </View>
+          <Image
+            source={{ uri: "https://picsum.photos/seed/696/3000/2000" }}
+            style={{
+              height: 70,
+              width: 70,
+              borderRadius: 35,
+            }}
+          />
+        </View>
+
+        <View className="mt-4">
+          <Text className="text-base text-secondary-400">113k followers</Text>
+        </View>
+
+        {/* Buttons */}
+        <View className="flex-row justify-between mt-4 w-full gap-4">
+          <Pressable className=" border border-secondary-300 rounded-xl h-[35px] flex-1 items-center justify-center px-2" style={{backgroundColor: theme === "light" ? "#000" : "#fff" }} >
+            <Text
+              className=" font-bold"
+              style={{ color: theme === "light" ? "#fff" : "#000" }}
+            >
+              Edit Profile
+            </Text>
+          </Pressable>
+
+          <Pressable className=" border border-secondary-300 rounded-xl h-[35px] flex-1 items-center justify-center px-2" style={{backgroundColor: theme === "light" ? "#000" : "#fff" }}>
+            <Text
+              className=" font-bold"
+              style={{ color: theme === "light" ? "#fff" : "#000" }}
+            >
+              Share Profile
+            </Text>
           </Pressable>
         </View>
-        <Image
-          style={styles.profilePicture}
-          source={{ uri: "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg?20200418092106" }}
-        />
-      </View>
-      <View style={styles.bioContainer}>
-        <Text style={styles.bioText}>Fashion enthusiast. Love to share my daily outfits and style tips!</Text>
-      </View>
-      <View>
-        <Text style={styles.galleryTitle}>Latest Post of JamarTG</Text>
 
-        <SafeAreaView className="flex-1">
-          <MasonryList
-            posts={posts}
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-          />
-        </SafeAreaView>
-      </View>
-    </ScrollView>
+        <View>
+          <MasonryList posts={posts} />
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
