@@ -1,6 +1,6 @@
-const express = require('express');
-const router = express.Router();
+import express from 'express';
 
+const router = express.Router();
 router.use('/users', require('../api/users/routes'));
 router.use('/posts', require('../api/posts/routes'));
 

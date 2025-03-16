@@ -1,7 +1,8 @@
-const express = require('express');
-const controller = require('./controller');
+import express from 'express';
+import controller from './controller';
+
 const router = express.Router();
-const verifyToken = require("../auth/authMiddleware");
+import verifyToken from '../auth/authMiddleware';
 
 router.post('/create-post', verifyToken, controller.createPost); 
 router.post('/add-rating', verifyToken, controller.addRating);

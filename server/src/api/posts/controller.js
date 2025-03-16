@@ -1,9 +1,8 @@
-const { v4: uuidv4 } = require('uuid');
-const Post = require('./model');
-const s3 = require("../../config/s3")
-const User = require("../users/model");
-const OpenAI = require('openai');
-// const { shortenBase64Image } = require('../../util/shortenbase64');
+import {v4 as uuidv4} from 'uuid';
+import OpenAI from 'openai';
+import Post from './model';
+import s3 from '../../config/s3';
+import User from '../users/model';
 
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 

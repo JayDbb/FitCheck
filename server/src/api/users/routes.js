@@ -1,5 +1,6 @@
-const express = require('express');
-const controller = require('./controller');
+import express from 'express';
+import controller from './controller';
+
 const router = express.Router();
 
 router.post('/create', controller.createUser);

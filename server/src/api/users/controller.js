@@ -1,5 +1,5 @@
-const User = require("./model");
-const jwt = require("jsonwebtoken");
+import User from "./model";
+import jwt from "jsonwebtoken";
 
 const createUser = async (req, res) => {
   const { username, email, password, accessToken } = req.body;
