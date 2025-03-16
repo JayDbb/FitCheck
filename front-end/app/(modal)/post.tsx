@@ -9,6 +9,7 @@ import {
   Platform,
   InputAccessoryView,
   StyleSheet,
+  useColorScheme,
 } from "react-native";
 import { Pressable } from "react-native";
 import axios from "axios";
@@ -17,13 +18,14 @@ import * as FileSystem from "expo-file-system";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SymbolView } from "expo-symbols";
 import { apiUrl } from "../../config";
+import * as Colors from "@bacons/apple-colors";
 
 const PostModal = () => {
   const [type, setType] = useState("");
   const [category, setCategory] = useState("");
 
   const [tags, setTags] = useState<string[]>([]);
-  const [tagInput, setTagInput] = useState('');
+  const [tagInput, setTagInput] = useState("");
   const [imageBase64, setImageBase64] = useState("");
   const [imageUri, setImageUri] = useState("");
   const [aiRating, setAiringRating] = useState(0);
@@ -39,6 +41,7 @@ const PostModal = () => {
     return JSON.parse(user as string)?.token;
   };
 
+  const theme = useColorScheme();
   const handleImagePick = async () => {
     try {
       const permissionResult =
@@ -61,21 +64,24 @@ const PostModal = () => {
         const base64 = await FileSystem.readAsStringAsync(uri, {
           encoding: FileSystem.EncodingType.Base64,
         });
-        
+
         setImageBase64(base64);
 
-        const response = await axios.post(`${apiUrl}/posts/get-ai-rating`, {
-          base64,
-        }, {
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${await token()}`
+        const response = await axios.post(
+          `${apiUrl}/posts/get-ai-rating`,
+          {
+            base64,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${await token()}`,
+            },
           }
-        });
+        );
 
         console.log(response.data);
       }
-
     } catch (error) {
       console.error("Error picking image:", error);
     }
@@ -88,25 +94,26 @@ const PostModal = () => {
     // }
 
     try {
-      const response = await axios.post(`${apiUrl}/posts/create-post`, {
-        type: "public",
-        category: "casual",
-        // tags,
-        imageBase64,
-        caption : "",
-        "taggedShirt":"",
-        "taggedPants": "",
-        "taggedShoes": "",
-        "AIrating": 4.0,
-        
-        
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${await token()}`
+      const response = await axios.post(
+        `${apiUrl}/posts/create-post`,
+        {
+          type: "public",
+          category: "casual",
+          // tags,
+          imageBase64,
+          caption: "",
+          taggedShirt: "",
+          taggedPants: "",
+          taggedShoes: "",
+          AIrating: 4.0,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${await token()}`,
+          },
         }
-      });
+      );
 
       Alert.alert("Success", "Post created successfully!");
       console.log(response.data);
@@ -130,7 +137,6 @@ const PostModal = () => {
     setTags(tags.filter((_, i) => i !== index));
   };
 
-
   return (
     <View className="p-4">
       <View className="flex-row items-start mb-4  border-gray-300 pb-4">
@@ -139,42 +145,48 @@ const PostModal = () => {
           className="h-10 w-10 rounded-full"
         />
         <View className="flex-1 ml-3">
-          <Text className="font-bold text-base">cajaun</Text>
+          <Text className="font-bold text-base" style={{ color: theme == "light" ? "#000" : "#fff" }} >cajaun</Text>
           <TextInput
-            className="text-base max-h-24"
+            className="text-base max-h-24 "
+            style={{color: Colors.label}}
             placeholder="What's new?"
             multiline
             inputAccessoryViewID={inputAccessoryViewID}
           />
 
-{imageUri ? (
-        <Image
-          source={{ uri: imageUri }}
-          className=" rounded-md mt-2"
-          style={{
-            width: "100%",
-            height: 200,
-            borderRadius: 6,
-          }}
-        />
-      ) : null}
+          {imageUri ? (
+            <Image
+              source={{ uri: imageUri }}
+              className=" rounded-md mt-2"
+              style={{
+                width: "100%",
+                height: 200,
+                borderRadius: 6,
+              }}
+            />
+          ) : null}
 
           <View className="flex-row gap-4">
             <Pressable onPress={handleImagePick} className="mt-3 p-2">
               <SymbolView
                 name="photo.on.rectangle.angled.fill"
                 type="hierarchical"
+                tintColor={theme === "light" ? "black" : "white"}
                 size={30}
               />
             </Pressable>
 
             <Pressable onPress={handleImagePick} className="mt-3 p-2">
-              <SymbolView name="camera" type="hierarchical" size={30} />
+              <SymbolView
+                name="camera"
+                type="hierarchical"
+                size={30}
+                tintColor={theme === "light" ? "black" : "white"}
+              />
             </Pressable>
           </View>
         </View>
       </View>
-
 
       <InputAccessoryView nativeID={inputAccessoryViewID}>
         <View className="flex-row justify-between items-end p-3 ">
@@ -182,14 +194,21 @@ const PostModal = () => {
             <SymbolView
               name="globe.americas.fill"
               type="hierarchical"
+              tintColor={theme === "light" ? "black" : "white"}
               size={30}
             />
           </View>
           <Pressable
-            className="bg-black px-5 py-2 rounded-full"
+            className=" px-5 py-2 rounded-full"
             onPress={handleSubmit}
+            style={{ backgroundColor: theme == "light" ? "#000" : "#fff" }}
           >
-            <Text className="text-white font-bold">Post</Text>
+            <Text
+              style={{ color: theme == "light" ? "#fff" : "#000" }}
+              className=" font-bold"
+            >
+              Post
+            </Text>
           </Pressable>
         </View>
       </InputAccessoryView>
